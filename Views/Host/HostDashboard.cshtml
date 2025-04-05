@@ -1,0 +1,224 @@
+﻿@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F5F5DC;
+        }
+
+        .navbar {
+            background-color: #D4C7A1;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+           
+            
+        }
+
+        .navbar logo{
+                width: 90px;
+                margin-right: 10px;
+        }
+
+            .navbar a {
+                margin: 0 15px;
+                text-decoration: none;
+                color: black;
+                font-weight: bold;
+            }
+
+        .ListYourCar:hover {
+            background: #4A3F35;
+            transform: scale(1.05);
+        }
+
+        .ListYourCar {
+            background: #8B572A;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+
+        
+
+
+        .welcome {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px;
+        }
+
+        .banner img {
+            width: 100%;
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background-color: #D4C7A1;
+            text-align: center;
+        }
+
+        .step {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .cars-container {
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .car-card {
+            background-color: #EEE8D5;
+            padding: 15px;
+            border-radius: 10px;
+            width: 250px;
+            text-align: center;
+        }
+
+            .car-card img {
+                width: 100%;
+                border-radius: 10px;
+            }
+
+        /*FOOTER*/
+        .social-container {
+            width: 100%;
+            margin: 0;
+            text-align: center;
+            padding: 40px 0;
+            background-color: #D3C6A4; /* Background color */
+        }
+
+        .social-header {
+            background-color: #3D3229;
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 8px 8px 0 0;
+            text-align: left;
+            padding-left: 15px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px 0;
+        }
+
+            .social-icons a img {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                transition: 0.3s ease;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+                background-color: #3D3229;
+            }
+
+                .social-icons a img:hover {
+                    transform: scale(1.1);
+                }
+
+        .support-text {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+            .support-text a {
+                text-decoration: underline;
+                color: black;
+            } 
+    </style>
+</head>
+<body>
+    <header>
+    <div class="navbar">
+        <div class="logo"><img src="~/images/Designer__2_-removebg-preview 1.png" alt="Logo"></div>
+        <div>
+            <a href="#home">Home</a>
+            <a href="#add-car">Add Car</a>
+            <a href="#your-cars">Your Cars</a>
+            <a href="#contact">Contact Us</a>
+        </div>
+            <div>
+                <a asp-controller="Host" asp-action="HostProfile">
+                    <img src="~/images/Account circle.png" alt="Profile" class="profile-icon">
+                </a>
+            </div>
+    </div>
+    </header>
+
+    <div>
+    <div class="welcome">Welcome, Rajveersinh!</div>
+    <a asp-controller="Host" asp-action="Listyourcar"> <button class="ListYourCar">List Your car</button></a>
+
+    <div class="banner">
+        <img src="~/images/image 63.png" alt="Cars">
+    </div>
+    </div>
+
+    <div class="steps-container">
+        <div class="step">1. LIST YOUR CAR 🚗</div>
+        <div class="step">2. SET AVAILABILITY ⏳</div>
+        <div class="step">3. START EARNING 🚀</div>
+    </div>
+
+    <div class="cars-container">
+        <div class="car-card">
+            <img src="~/images/Blue_baleno.png" alt="Car 1">
+            <p><strong>Baleno 2020</strong></p>
+            <p>238/hr | Manual | Petrol | Seats: 5</p>
+        </div>
+        <div class="car-card">
+            <img src="~/images/Blue_baleno.png" alt="Car 2">
+            <p><strong>Baleno 2020</strong></p>
+            <p>238/hr | Manual | Petrol | Seats: 5</p>
+        </div>
+    </div>
+
+    <!--fOOTER-->
+    <div class="social-container">
+        <div class="social-header">Get connected with us on Social Network</div>
+
+        <div class="social-icons">
+            <a href="#"><img src="~/images/YouTube.png" alt="YouTube"></a>
+            <a href="#"><img src="~/images/X.png" alt="Twitter"></a>
+            <a href="#"><img src="~/images/Facebook F.png" alt="Facebook"></a>
+            <a href="#"><img src="~/images/Instagram.png" alt="Instagram"></a>
+        </div>
+
+        <div class="support-text">
+            For Help and Support <a href="#">Click Here</a>
+        </div>
+    </div>
+</body>
+</html>
+

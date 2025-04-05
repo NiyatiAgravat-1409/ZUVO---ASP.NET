@@ -1,0 +1,169 @@
+﻿@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f4f1ea;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .sidebar {
+            background-color: #d5ceb4;
+            min-height: 100vh;
+        }
+
+            .sidebar a {
+                color: #3e3e3e;
+                text-decoration: none;
+                display: block;
+                padding: 12px 20px;
+            }
+
+                .sidebar a:hover {
+                    background-color: #c5bfa3;
+                }
+
+        .card-box {
+            background-color: #eae4d3;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .chart-bar {
+            height: 150px;
+            background: #6b5e4e;
+            border-radius: 6px;
+        }
+
+            .chart-bar.red {
+                background-color: #d04a3f;
+            }
+
+        .progress-bar {
+            height: 10px;
+        }
+
+        .btn-check {
+            background-color: #d94b3b;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar d-flex flex-column">
+                <h3 class="p-3">Admin</h3>
+                <a href="AdminDashboard">Dashboard</a>
+                <a href="Bookings">Bookings</a>
+                <a href="Units">Units</a>
+                <a href="Clients">Clients</a>
+                <a href="Payments">Payments</a>
+            </div>
+
+            <!-- Main Dashboard -->
+            <div class="col-md-7 p-4">
+                <h4>DASHBOARD</h4>
+
+                <!-- Summary Cards -->
+                <div class="row">
+                    <div class="col-md-3 card-box text-center">Total Revenue<br><strong>₹340599</strong></div>
+                    <div class="col-md-3 card-box text-center">Total Revenue<br><strong>₹340599</strong></div>
+                    <div class="col-md-3 card-box text-center">Total Revenue<br><strong>₹340599</strong></div>
+                    <div class="col-md-3 card-box text-center">Total Revenue<br><strong>₹340599</strong></div>
+                </div>
+
+                <!-- Chart and Status -->
+                <div class="row">
+                    <div class="col-md-6 card-box">
+                        <h6>Booking Overview <span class="float-end">This Year</span></h6>
+                        <div class="d-flex justify-content-between align-items-end" style="height: 200px">
+                            <div class="chart-bar" style="height: 70px; width: 8%;"></div>
+                            <div class="chart-bar" style="height: 90px; width: 8%;"></div>
+                            <div class="chart-bar" style="height: 75px; width: 8%;"></div>
+                            <div class="chart-bar" style="height: 60px; width: 8%;"></div>
+                            <div class="chart-bar" style="height: 120px; width: 8%;"></div>
+                            <div class="chart-bar red" style="height: 100px; width: 8%;"></div>
+                            <div class="chart-bar" style="height: 90px; width: 8%;"></div>
+                            <div class="chart-bar" style="height: 110px; width: 8%;"></div>
+                            <div class="chart-bar" style="height: 70px; width: 8%;"></div>
+                            <div class="chart-bar" style="height: 80px; width: 8%;"></div>
+                            <div class="chart-bar" style="height: 60px; width: 8%;"></div>
+                            <div class="chart-bar" style="height: 70px; width: 8%;"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 card-box">
+                        <h6>Rent Status <span class="float-end">This Week</span></h6>
+                        <p><span style="color: green">●</span> Hired - 52%</p>
+                        <p><span style="color: red">●</span> Pending - 27%</p>
+                        <p><span style="color: gray">●</span> Cancelled - 21%</p>
+                    </div>
+                </div>
+
+                <!-- Reminders -->
+                <div class="card-box">
+                    <h6>Reminders <button class="btn btn-sm btn-dark float-end">+</button></h6>
+                    <div class="mb-2 p-2 bg-light rounded">Inspect and service the fleet vehicles. <br><small>2025-10-10</small></div>
+                    <div class="mb-2 p-2 bg-light rounded">Inspect and service the fleet vehicles. <br><small>2025-10-10</small></div>
+                    <div class="mb-2 p-2 bg-light rounded">Inspect and service the fleet vehicles. <br><small>2025-10-10</small></div>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            
+            <div class="col-md-3 p-4">
+                <div class="card-box">
+                    <h6>Car Availability</h6>
+                    <select class="form-select mb-2">
+                        <option>Car Type</option>
+                    </select>
+                    <input type="date" class="form-control mb-2" />
+                    <input type="date" class="form-control mb-2" />
+                    <div class="btn-check"> <button class="btn-check">Check</button></div>
+                </div>
+           
+                <div class="card-box mt-3">
+                    <h6>Car Types</h6>
+                    <div class="mb-2">
+                        <strong>Baleno</strong>
+                        <div class="progress"><div class="progress-bar bg-dark" style="width: 30%"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Ertiga</strong>
+                        <div class="progress"><div class="progress-bar bg-danger" style="width: 25%"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Swift</strong>
+                        <div class="progress"><div class="progress-bar bg-secondary" style="width: 50%"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Breeza</strong>
+                        <div class="progress"><div class="progress-bar bg-danger" style="width: 35%"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <strong>S-Presso</strong>
+                        <div class="progress"><div class="progress-bar bg-danger" style="width: 46%"></div></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

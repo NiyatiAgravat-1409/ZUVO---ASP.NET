@@ -8,5 +8,32 @@ namespace ZUVO_MVC_.Controllers
         {
             return View();
         }
+
+        public IActionResult HostDashboard()
+        {
+            return View(); // Ensure this line is returning the correct view
+        }
+
+        public IActionResult Listyourcar()
+        {
+            return View();
+        }
+
+        public IActionResult HostProfile()
+        {
+            return View();
+        }
+
+        public IActionResult EditCarDetails()
+        {
+            return View();
+        }
+
+        public IActionResult HostSignin()
+        {
+            return View();
+        }
     }
+
+
 }

@@ -1,0 +1,417 @@
+﻿@{
+    Layout = null;
+}
+
+
+@{
+    ViewData["Title"] = "Host Account";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        /* Navbar styling */
+        .navbar {
+            background-color: #D9C9A3;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Container for flex layout */
+        .container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Logo and title */
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 40px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        /* Right-side buttons */
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn {
+            background-color: #3D2C1D;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            margin-right: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+            .btn:hover {
+                background-color: #2B1D13;
+            }
+
+        /* Profile icon */
+        .profile-icon {
+            height: 40px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        /* Profile Page Container */
+        .profile-container {
+            display: flex;
+            width: 100%;
+            margin: 20px auto;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 25%;
+            background: #E2D1AC;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .profile-pic img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .profile-pic h3,
+        .profile-pic p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .edit-icons {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .edit-btn, .verify-btn {
+            background: #3D2C1D;
+            color: white;
+            border: none;
+            padding: 8px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            background: #3D2C1D;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin: 8px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        /* Main Content */
+        .main-content {
+            width: 75%;
+            padding: 20px;
+            background: #D9C9A3;
+            border-radius: 10px;
+            margin-left: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #3D2C1D;
+        }
+
+        .info-section {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .License {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #3D2C1D;
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #CCC;
+            border-radius: 5px;
+            background-color: #F7F3E9;
+            margin-top: 5px;
+        }
+
+        /* Payment and Billing Section */
+        .link-wallet {
+            background: #3D2C1D;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .balance-section {
+            display: flex;
+            justify-content: space-between;
+            background: #D9C9A3;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Transactions */
+        .transaction {
+            display: flex;
+            align-items: center;
+            background: #3D2C1D;
+            padding: 10px;
+            border-radius: 10px;
+            color: white;
+            margin-top: 10px;
+        }
+
+            .transaction img {
+                width: 60px;
+                height: 40px;
+                border-radius: 5px;
+                margin-right: 15px;
+            }
+
+        .transaction-details {
+            flex-grow: 1;
+        }
+
+        .download-invoice {
+            background: #E2D1AC;
+            color: black;
+            border: none;
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+    </style>
+</head>
+<body>
+    <!--Navbar-->
+    <section>
+        <nav class="navbar">
+            <div class="container">
+                <!-- Logo & Title -->
+                <div class="logo-section">
+                    <img src="~/images/Designer__2_-removebg-preview 1.png" alt="Zuvo Logo" class="logo">
+                    <span class="title">Host Account</span>
+                </div>
+
+                <!-- Right-side Buttons -->
+                <div class="nav-buttons">
+                    <button class="btn">Become a Host</button>
+                    <button class="btn">Name</button>
+                    <a asp-controller="Host" asp-action="Profile">
+                        <img src="~/images/Account circle.png" alt="Profile" class="profile-icon">
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </section>
+    <section id="profile">
+        <div class="profile-container">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="profile-pic">
+                    <img src="~/images/Account circle.png" alt="Profile Picture">
+                    <h3>Person Name</h3>
+                    <p>8849593953</p>
+                    <p>abcd@gmail.com</p>
+                </div>
+                <div class="edit-icons">
+                    <button class="edit-btn">✎</button>
+                    <button class="verify-btn">✔</button>
+                </div>
+                <nav class="side-nav">
+                    <button class="nav-btn">Personal Information</button>
+                    <button class="nav-btn">Driving License</button>
+                    <button class="nav-btn">Payment & Billing</button>
+                    <button class="nav-btn">Bookings</button>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <h2>Personal Information</h2>
+
+                <div class="info-section">
+                    <h3>Account Details</h3>
+                    <label>Email</label>
+                    <input type="email" value="abcd@gmail.com">
+
+                    <label>Mobile</label>
+                    <input type="text" value="8849593953">
+
+                    <label>Username</label>
+                    <input type="text" value="abcd@gmail.com">
+                </div>
+
+                <div class="info-section">
+                    <h3>Personal Details</h3>
+                    <label>Name</label>
+                    <input type="text" value="Miraliba Jadeja">
+
+                    <label>Gender</label>
+                    <input type="text" value="Female">
+
+                    <label>Date of Birth</label>
+                    <input type="text" value="DD/MM/YYYY">
+
+                    <label>Address</label>
+                    <input type="text" value="asdv, dfsd, fdfdsdfdsfd, 332434">
+                </div>
+                <div>
+                    <h2>Driving License Information</h2>
+                    <div class="License">
+                        <label>License No</label>
+                        <input type="text" name="name" value="abcd@gmail.com">
+
+                        <label>Issue State</label>
+                        <input type="text" name="name" value="9892933823">
+
+                        <lablel>Expiry Date</lablel>
+                        <input type="text" name="name" value="DD/MM/YYYY">
+
+                        <label>Upload Photo</label>
+                        <input type="text" name="name" value="" />
+                    </div>
+
+                    <!-- Payment and Billing Section -->
+                    <h2>Payment And Billing</h2>
+
+                    <div class="info-section">
+                        <h3>PAYTM WALLET</h3>
+                        <p>Wallet Status : <span style="font-weight: bold;">Not Linked</span></p>
+                        <button class="link-wallet">Link Wallet</button>
+
+                        <div class="balance-section">
+                            <span>Balance</span>
+                            <span>💰 0</span>
+                        </div>
+                    </div>
+
+                    <!-- Transactions -->
+                    <div class="info-section">
+                        <h3>Transactions</h3>
+
+                        <div class="transaction">
+                            <img src="~/images/Blue_baleno.png" alt="Car Rental">
+                            <div class="transaction-details">
+                                <p><b>12345667</b></p>
+                                <p>26 Jan – 28 Jan</p>
+                                <p>5000 Paid</p>
+                                <p>Paypal</p>
+                            </div>
+                            <button class="download-invoice">Download Invoice</button>
+                        </div>
+
+                        <div class="transaction">
+                            <img src="~/images/grey_ertiga-removebg-preview 1.png " alt="Car Rental">
+                            <div class="transaction-details">
+                                <p><b>12345667</b></p>
+                                <p>26 Jan – 28 Jan</p>
+                                <p>5000 Paid</p>
+                                <p>Paypal</p>
+                            </div>
+                            <button class="download-invoice">Download Invoice</button>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div>
+                    <h2>Bookings</h2>
+                    <div class="transaction">
+                        <img src="~/images/grey_ertiga-removebg-preview 1.png " alt="Car Rental">
+                        <div class="transaction-details">
+                            <p><b>12345667</b></p>
+                            <p>26 Jan – 28 Jan</p>
+                            <p>5000 Paid</p>
+                            <p>Paypal</p>
+                        </div>
+                        <button class="download-invoice">Download Invoice</button>
+                    </div>
+
+                    <div class="transaction">
+                        <img src="~/images/grey_ertiga-removebg-preview 1.png " alt="Car Rental">
+                        <div class="transaction-details">
+                            <p><b>12345667</b></p>
+                            <p>26 Jan – 28 Jan</p>
+                            <p>5000 Paid</p>
+                            <p>Paypal</p>
+                        </div>
+                        <button class="download-invoice">Download Invoice</button>
+                    </div>
+                </div>
+
+                <div class="transaction">
+                    <img src="~/images/grey_ertiga-removebg-preview 1.png " alt="Car Rental">
+                    <div class="transaction-details">
+                        <p><b>12345667</b></p>
+                        <p>26 Jan – 28 Jan</p>
+                        <p>5000 Paid</p>
+                        <p>Paypal</p>
+                    </div>
+                    <button class="download-invoice">Download Invoice</button>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        </div>
+        </div>
+    </section>
+
+</body>
+</html>

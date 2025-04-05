@@ -1,0 +1,293 @@
+﻿@{
+    Layout = null;
+}
+
+@{
+    ViewData["Title"] = "Add Your Car Details";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f5ed;
+        margin: 0;
+        padding: 0;
+    }
+
+
+    .navbar {
+        background-color: #D6CFB4;
+        padding: 10px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+        .navbar img {
+            height: 70px;
+        }
+
+    .section {
+        background: white;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+        .section h2 {
+            font-size: 18px;
+            border-bottom: 2px solid #D6CFB4;
+            padding-bottom: 5px;
+        }
+
+    input, select {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    .file-upload {
+        margin: 10px 0;
+    }
+
+        .file-upload button {
+            background-color: #3D3229;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+    .file-info {
+        font-size: 12px;
+        color: green;
+    }
+
+    .radio-group {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+        .radio-group input {
+            width: auto;
+        }
+
+
+    
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        width: 60%;
+        margin: 20px auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #3D3229;
+        margin-top: 20px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .form-group {
+        margin: 10px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+        .form-group label {
+            font-size: 16px;
+            color: #333;
+            flex: 1;
+        }
+
+        .form-group input {
+            flex: 2;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #f4f0e4;
+            font-size: 14px;
+        }
+
+            .form-group input:focus {
+                outline: none;
+                border-color: #a1905b;
+            }
+
+    .file-upload {
+        flex: 2;    
+    }
+
+        
+
+    .file-hint {
+        font-size: 12px;
+        color: green;
+        margin-top: 5px;
+    }
+
+    .submit-btn {
+        width: 100%;
+        background: #3D3229;
+        color: white;
+        border: none;
+        padding: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+
+        .submit-btn:hover {
+            background: #3D3229;
+        }
+
+
+</style>
+
+<div class="navbar">
+    <img src="/images/Designer__2_-removebg-preview 1.png" alt="Logo">
+    <h2>ADD YOUR CAR DETAILS</h2>
+    <a asp-controller="Host" asp-action="EditCarDetails">
+        <img src="~/images/Account circle.png" alt="Profile" class="profile-icon">
+    </a>
+</div>
+
+
+<div class="container">
+    <div class="section">
+        <h2>CAR INFORMATION</h2>
+        <label>Car Model</label>
+        <input type="text">
+        <label>Year</label>
+        <input type="number">
+        <label>Color</label>
+        <input type="text">
+        <label>License Plate No.</label>
+        <input type="text">
+        <label>VIN</label>
+        <input type="text">
+    </div>
+
+    <div class="section">
+        <h2>PHOTOS AND VIDEOS</h2>
+        <p>Upload multiple car photos : Front, back, interior, and any unique features</p>
+        <div class="file-upload">
+            <button>Choose File</button>
+            <p class="file-info">File should be less than 20MB and .jpg or .png only</p>
+        </div>
+        <p>Upload video: Short video showcasing the car</p>
+        <div class="file-upload">
+            <button>Choose File</button>
+            <p class="file-info">File should be less than 40MB and .mp4 or .mkv only</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>RENTAL DETAILS</h2>
+        <label>Rental Price</label>
+        <input type="text" placeholder="₹ /day">
+        <label>Cancellation</label>
+        <div class="radio-group">
+            <input type="radio" name="cancel" value="yes"> Yes
+            <input type="radio" name="cancel" value="no"> No
+        </div>
+        <label>Min Period</label>
+        <input type="number" placeholder="days">
+    </div>
+
+    <div class="section">
+        <h2>CAR FEATURES</h2>
+        <label>Mileage</label>
+        <input type="text">
+        <label>Fuel Types</label>
+        <input type="text">
+        <label>Number of Seats</label>
+        <input type="number">
+        <label>Additional Features</label>
+        <input type="text">
+    </div>
+
+
+    <div class="section"> 
+
+        <div class="section-title">SAFETY AND INSURANCE</div>
+
+        <div class="form-group">
+            <label>Insurance Type</label>
+            <input type="text" placeholder="Enter insurance type">
+        </div>
+
+        <div class="form-group">
+            <label>Insurance No</label>
+            <input type="text" placeholder="Enter insurance number">
+        </div>
+
+        <div class="form-group">
+            <label>Insurance Company</label>
+            <input type="text" placeholder="Enter insurance company">
+        </div>
+
+        <div class="section-title">OWNER INFORMATION</div>
+
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" placeholder="Enter owner's name">
+        </div>
+
+        <div class="form-group">
+            <label>Contact No</label>
+            <input type="text" placeholder="Enter contact number">
+        </div>
+
+        <div class="form-group">
+            <label>Profile Picture</label>
+            <div class="file-upload">
+                <input type="file">
+            </div>
+        </div>
+
+        <div class="section-title">LEGAL AND DOCUMENTATION</div>
+
+        <div class="form-group">
+            <label>Car Registration Document</label>
+            <div class="file-upload">
+                <input type="file">
+                <p class="file-hint">file should be less than 20MB and .jpg and .png only</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Insurance Certificate</label>
+            <div class="file-upload">
+                <input type="file">
+                <p class="file-hint">file should be less than 20MB and .jpg and .png only</p>
+            </div>
+        </div>
+
+        <button class="submit-btn">SUBMIT</button>
+
+    </div>
+
+    
+</div>
+</html>
