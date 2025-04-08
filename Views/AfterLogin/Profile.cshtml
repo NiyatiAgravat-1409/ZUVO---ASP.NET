@@ -14,6 +14,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
     <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        .profile-page {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 25%;
+            background: #E2D1AC;
+            padding: 20px;
+            box-sizing: border-box;
+            height: 100vh;
+            position: fixed; /* Make it fixed */
+            top: 0;
+            left: 0;
+        }
+
+        .main-content {
+            margin-left: 25%; /* Match the sidebar width */
+            width: 75%;
+            height: 100vh;
+            overflow-y: auto;
+            background: #D9C9A3;
+            padding: 20px;
+            box-sizing: border-box;
+        }
         /* Navbar styling */
         .navbar {
             background-color: #D9C9A3;
@@ -77,11 +110,9 @@
         /* Profile Page Container */
         .profile-container {
             display: flex;
-            width: 100%;
-            
-            margin: 20px auto;
+            height: 100vh; /* Full height of the viewport */
+            overflow: hidden;
         }
-
         /* Sidebar */
         .sidebar {
             width: 25%;
@@ -89,6 +120,10 @@
             padding: 20px;
             text-align: center;
             border-radius: 10px;
+            height: 100vh; /* Make sidebar full height */
+            position: sticky;
+            top: 0;
+            overflow: hidden;
         }
 
         .profile-pic img {
@@ -140,6 +175,8 @@
             background: #D9C9A3;
             border-radius: 10px;
             margin-left: 20px;
+            overflow-y: auto;
+            height: 100vh; /* Same as sidebar */
         }
 
         h2 {
@@ -251,7 +288,9 @@
 
             <!-- Right-side Buttons -->
             <div class="nav-buttons">
+                <a asp-controller="Host" asp-action="BecomeHost">
                 <button class="btn">Become a Host</button>
+                </a>
                 <button class="btn">Name</button>
                 <a asp-controller="Account" asp-action="Profile">
                     <img src="~/images/Account circle.png" alt="Profile" class="profile-icon">
@@ -261,7 +300,7 @@
     </nav>
     </section>
     <section id="profile">
-        <div class="profile-container">
+        <div class="profile-container profile-page">
             <!-- Sidebar -->
             <div class="sidebar">
                 <div class="profile-pic">
@@ -275,18 +314,19 @@
                     <button class="verify-btn">✔</button>
                 </div>
                 <nav class="side-nav">
-                    <button class="nav-btn">Personal Information</button>
-                    <button class="nav-btn">Driving License</button>
-                    <button class="nav-btn">Payment & Billing</button>
-                    <button class="nav-btn">Bookings</button>
+                    <button class="nav-btn" onclick="scrollToSection('personal-info')">Personal Information</button>
+                    <button class="nav-btn" onclick="scrollToSection('driving-license')">Driving License</button>
+                    <button class="nav-btn" onclick="scrollToSection('payment-billing')">Payment & Billing</button>
+                    <button class="nav-btn" onclick="scrollToSection('bookings')">Bookings</button>
                 </nav>
+
             </div>
 
             <!-- Main Content -->
             <div class="main-content">
                 <h2>Personal Information</h2>
 
-                <div class="info-section">
+                <div class="info-section" id="personal-info">
                     <h3>Account Details</h3>
                     <label>Email</label>
                     <input type="email" value="abcd@gmail.com">
@@ -314,7 +354,7 @@
                 </div>
                 <div>
                 <h2>Driving License Information</h2>
-                <div class="License">
+                    <div class="License" id="driving-license">
                     <label>License No</label>
                     <input type="text" name="name" value="abcd@gmail.com">
 
@@ -331,7 +371,7 @@
                     <!-- Payment and Billing Section -->
                     <h2>Payment And Billing</h2>
 
-                    <div class="info-section">
+                    <div class="info-section" id="payment-billing">
                         <h3>PAYTM WALLET</h3>
                         <p>Wallet Status : <span style="font-weight: bold;">Not Linked</span></p>
                         <button class="link-wallet">Link Wallet</button>
@@ -346,7 +386,7 @@
                     <div class="info-section">
                         <h3>Transactions</h3>
 
-                        <div class="transaction">
+                        <div class="info-section" id="bookings">
                             <img src="~/images/Blue_baleno.png" alt="Car Rental">
                             <div class="transaction-details">
                                 <p><b>12345667</b></p>

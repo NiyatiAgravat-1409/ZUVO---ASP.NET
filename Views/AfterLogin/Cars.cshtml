@@ -1,0 +1,258 @@
+﻿@{
+    ViewData["Title"] = "ZUVO Car Rental";
+}
+
+<div class="car-rental-container">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="~/images/zuvo-logo.png" alt="ZUVO Logo" class="logo-img">
+            <span class="logo-text">ZUVO</span>
+        </div>
+        <div class="profile">
+            <div class="profile-name">Name</div>
+            <div class="profile-icon">
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Location Header -->
+    <header class="location-header">
+        <div class="location-info">
+            <div class="info-label">Location</div>
+            <div class="info-value">A2500 University Center, 252 Champions Way...</div>
+        </div>
+        <div class="check-info">
+            <div class="check-in">
+                <div class="info-label">Check-in</div>
+                <div class="info-value">4 Feb'25, 5PM</div>
+                <div class="edit-btn">Edit</div>
+            </div>
+            <div class="check-out">
+                <div class="info-label">Check-out</div>
+                <div class="info-value">4 Feb'25, 10PM</div>
+                <div class="edit-btn">Edit</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Back Button -->
+        <div class="back-btn">
+            <i class="fas fa-chevron-left"></i> Back
+        </div>
+
+        <!-- Car Details Section (Scrollable) -->
+        <section class="car-details">
+            <div class="car-images">
+                <div class="main-image">
+                    <img src="~/images/car-main.jpg" alt="Maruti Suzuki Fronx">
+                </div>
+                <div class="thumbnail-images">
+                    <img src="~/images/car-side.jpg" alt="Car Side View">
+                    <img src="~/images/car-interior.jpg" alt="Car Interior">
+                </div>
+            </div>
+
+            <div class="car-host">
+                <i class="fas fa-user-circle"></i> Hosted by Miyati Agravat
+            </div>
+
+            <div class="car-title">
+                <h2>Maruti Suzuki Fronx 2023</h2>
+                <p>Manual transmission missing: env&fuel_variant-cng .5 Seats</p>
+            </div>
+
+            <div class="car-tabs">
+                <div class="tab active">Reviews</div>
+                <div class="tab">Location</div>
+                <div class="tab">Features</div>
+                <div class="tab">Benefits</div>
+                <div class="tab">Cancellation</div>
+                <div class="tab">FAQs</div>
+                <div class="tab">Agreement</div>
+            </div>
+
+            <div class="ratings-section">
+                <h3>Ratings & Reviews</h3>
+                <div class="rating-summary">
+                    <div class="rating-number">4.9</div>
+                    <div class="rating-info">Based on 14 Trips</div>
+                </div>
+                <div class="reviews-count">Reviews (6)</div>
+
+                <div class="review-cards">
+                    @for (int i = 0; i < 3; i++)
+                    {
+                        <div class="review-card">
+                            <div class="reviewer">
+                                <div class="reviewer-icon">M</div>
+                                <div class="reviewer-name">MAHEK SINGH</div>
+                                <div class="reviewer-date">on Jan 3rd, 2023</div>
+                                <div class="reviewer-rating">
+                                    <i class="fas fa-star"></i>
+                                    <span>3</span>
+                                </div>
+                            </div>
+                            <div class="review-text">
+                                Car was extremely dirty from inside as well as outside too much damaged
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+
+        <!-- Payment Section (Fixed) -->
+        <section class="payment-section">
+            <h3 class="exclusive-offers">Exclusive Offers</h3>
+
+            <div class="offers-carousel">
+                <div class="offer-card">
+                    <div class="offer-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="offer-details">
+                        <h4>Explore Offers</h4>
+                        <p>Check Availability Here</p>
+                    </div>
+                    <div class="carousel-nav">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fee-details">
+                <div class="fee-item">
+                    <div class="fee-name">Trip Protection Fee</div>
+                    <div class="fee-actions">
+                        <span class="change-btn">Change</span>
+                        <span class="fee-amount">₹209</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="total-price">
+                <div class="price-header">
+                    <h3>Total Price</h3>
+                    <div class="price-amount">₹1,156</div>
+                </div>
+                <div class="price-note">Inclusive of taxes</div>
+                <div class="view-details">View Details</div>
+            </div>
+
+            <button class="pay-button" id="payButton">PROCEED TO PAY</button>
+        </section>
+    </main>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="styleshhet" href="~/css/styles.css">
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching functionality
+            const tabs = document.querySelectorAll('.tab');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+
+                    // Here you would typically show/hide content based on the selected tab
+                    // For this demo, we're just switching the active state
+                });
+            });
+
+            // Back button functionality
+            const backButton = document.querySelector('.back-btn');
+
+            backButton.addEventListener('click', function() {
+                // In a real app, this would navigate back
+                // For this demo, we'll just log it
+                console.log('Back button clicked');
+                // You could use ASP.NET Core's history navigation
+                // window.history.back();
+            });
+
+            // Edit buttons functionality
+            const editButtons = document.querySelectorAll('.edit-btn');
+
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const section = this.closest('.check-in, .check-out');
+                    const sectionType = section.classList.contains('check-in') ? 'Check-in' : 'Check-out';
+
+                    // In a real app, this would open an edit modal
+                    console.log(`Edit ${sectionType} clicked`);
+                    // You could trigger a modal or redirect to an edit page
+                });
+            });
+
+            // Pay button functionality
+            const payButton = document.querySelector('.pay-button');
+
+            payButton.addEventListener('click', function() {
+                // In a real app, this would proceed to payment
+                console.log('Proceed to pay clicked');
+                // You could submit a form or redirect to a payment page
+                // window.location.href = '@Url.Action("Payment", "CarRental")';
+            });
+
+            // Change button functionality
+            const changeButton = document.querySelector('.change-btn');
+
+            changeButton.addEventListener('click', function() {
+                // In a real app, this would allow changing the fee option
+                console.log('Change trip protection fee clicked');
+            });
+
+            // View details functionality
+            const viewDetails = document.querySelector('.view-details');
+
+            viewDetails.addEventListener('click', function() {
+                // In a real app, this would show price breakdown
+                console.log('View details clicked');
+                // You could show a modal with price details
+            });
+
+            // Make sure car details section is scrollable but payment section is fixed
+            function setupScrolling() {
+                const carDetails = document.querySelector('.car-details');
+                const paymentSection = document.querySelector('.payment-section');
+
+                // On desktop, make car details scrollable
+                if (window.innerWidth >= 768) {
+                    carDetails.style.overflowY = 'auto';
+                    carDetails.style.maxHeight = 'calc(100vh - 180px)';
+
+                    // Make payment section sticky
+                    paymentSection.style.position = 'sticky';
+                    paymentSection.style.top = '20px';
+                    paymentSection.style.maxHeight = 'calc(100vh - 180px)';
+                } else {
+                    // On mobile, reset these styles
+                    carDetails.style.overflowY = 'visible';
+                    carDetails.style.maxHeight = 'none';
+
+                    paymentSection.style.position = 'static';
+                    paymentSection.style.maxHeight = 'none';
+                }
+            }
+
+            // Initial setup
+            setupScrolling();
+
+            // Update on window resize
+            window.addEventListener('resize', setupScrolling);
+        });
+    </script>
+}

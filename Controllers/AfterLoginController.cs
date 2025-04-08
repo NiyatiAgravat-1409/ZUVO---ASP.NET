@@ -13,5 +13,11 @@ namespace ZUVO_MVC_.Controllers
         {
             return View();
         }
+
+        public IActionResult Cars()
+        {
+            return View();
+        }
+
     }
 }

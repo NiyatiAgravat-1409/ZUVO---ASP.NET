@@ -25,6 +25,7 @@
             align-items: center;
             padding: 15px 50px;
             background: #D6CFB4;
+            position: sticky;
         }
 
             .navbar .logo {
@@ -419,12 +420,14 @@
         <div class="logo">
             <img src="~/images/Designer__2_-removebg-preview 1.png" alt="Zuvo Logo">
         </div>
-        <nav class="nav-links">
-            <a href="#">Home</a>
-            <a href="#">About</a>
-            <a href="#">Vehicle Models</a>
-            <a href="#">Contact</a>
-        </nav>
+        <ul class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#book-section">Book</a>
+            <a href="#about-section">About</a>
+            <a href="#vehicle-models">Vehicle Models</a>
+            <a href="#contact">Contact</a>
+            <a asp-controller="Host" asp-action="BecomeHost">Become a Host</a>
+        </ul>
             
            <div class="head3">   
             <div>
@@ -439,7 +442,7 @@
         
     </header>
     <!-- Hero Section -->
-    <section class="hero-section">
+    <section id="home" class="hero-section">
         <div class="hero-content">
             <p>Plan your trip now</p>
             <h1>Save <span>big</span> with our ZUVO</h1>
@@ -456,7 +459,7 @@
 
     </section>
     <!-- Book a Car Section -->
-    <section class="booking">
+    <section id="book-section" class="book-section">
         <h2>Book a car</h2>
         <div class="booking-form">
             <div class="input-group">
@@ -493,7 +496,7 @@
     </section>
 
     <!--About Us Section-->
-    <section class="about-section">
+    <section id="about-section" class="about-section">
         <!-- Highway Background -->
         <div class="background">
         </div>
@@ -518,7 +521,7 @@
 
     <!--Vehicle models-->
 
-    <section class="vehicle-section">
+    <section id="vehicle-models" class="vehicle-section">
         <h2>Vehicle Models</h2>
         <div class="filters">
             <button class="filter-btn">Vehicle Type</button>
