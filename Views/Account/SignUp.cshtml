@@ -2,9 +2,10 @@
     Layout = null;
 }
 @using ZUVO_MVC_.ViewModels;
-@model LoginViewModel;
+@model RegisterViewModel;
+
 @{
-    ViewData["Title"] = "Sign In";
+    ViewData["Title"] = "Sign Up";
 }
 
 <!DOCTYPE html>
@@ -18,17 +19,18 @@
         body {
             background-color: #E5D5B3;
             font-family: Arial, sans-serif;
-            padding: 0;
-            margin-top: 100px;
+            padding : 0;
+            margin-top  : 100px;
+
         }
 
         .signin-container {
             display: flex;
             height: 100vh;
-            width: 100%;
+            width : 100%;
             justify-content: center;
             align-items: center;
-            margin-top: 200px;
+            margin-top : 200px;
             padding: 0;
             margin: 0;
         }
@@ -107,10 +109,15 @@
 
             <!-- Right Side Form -->
             <div class="signin-right">
-                <h3 class="text-center mb-4">Welcome Back 👋</h3>
+                <h3 class="text-center mb-4">Welcome To ZUVO 👋</h3>
 
-                <form method="post" asp-controller="Account" asp-action="SignIn">
+                <form method="post" asp-controller="Account" asp-action="SignUp">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Name</label>
+                        <input type="text" asp-for="Name" class="form-control" placeholder="Rajveersinh Jadeja" required>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
                     <div class="mb-3">
                         <label asp-for="Email" class="form-label">Email</label>
                         <input type="email" asp-for="Email" class="form-control" placeholder="Example@email.com" required>
@@ -118,13 +125,17 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Email" class="form-label">Password</label>
+                        <label asp-for="Password" class="form-label">Password</label>
                         <input type="password" asp-for="Password" class="form-control" placeholder="at least 8 characters" required>
                         <span asp-validation-for="Password" class="text-danger"></span>
-                        <a asp-controller="Account" asp-action="VerifyEmail" class="forgot-password">Forgot Password</a>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" asp-for="ConfirmPassword" class="form-control" placeholder="at least 8 characters" required>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
 
-                    <button type="submit"  class="btn btn-primary">Sign in</button>
+                    <button type="submit" value="Register" class="btn btn-primary">Sign Up</button>
 
                     <hr>
 
@@ -137,7 +148,7 @@
                     </button>
 
                     <div class="signup-link">
-                        Don't have an account? <a href="/Account/Signup">Sign Up</a>
+                        Already have an account? <a href="/Account/SignIn">Sign Up</a>
                     </div>
                 </form>
             </div>
