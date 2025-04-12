@@ -4,7 +4,7 @@
 
 
 @{
-    ViewData["Title"] = "My Account";
+    ViewData["Title"] = "Profile";
 }
 
 <!DOCTYPE html>
@@ -305,13 +305,13 @@
             <div class="sidebar">
                 <div class="profile-pic">
                     <img src="~/images/Account circle.png" alt="Profile Picture">
-                    <h3>Person Name</h3>
-                    <p>8849593953</p>
-                    <p>abcd@gmail.com</p>
+                    <h3>@Model.FullName</h3>
+                    <p>@Model.PhoneNumber</p>
+                    <p>@Model.Email</p>
                 </div>
                 <div class="edit-icons">
-                    <button class="edit-btn">✎</button>
-                    <button class="verify-btn">✔</button>
+                    <button class="edit-btn" onclick="enableEdit()">✎</button>
+                    <button class="verify-btn" onclick="saveChanges()">✔</button>
                 </div>
                 <nav class="side-nav">
                     <button class="nav-btn" onclick="scrollToSection('personal-info')">Personal Information</button>
@@ -329,43 +329,43 @@
                 <div class="info-section" id="personal-info">
                     <h3>Account Details</h3>
                     <label>Email</label>
-                    <input type="email" value="abcd@gmail.com">
+                    <input type="email" id="email" value="@Model.Email" disabled>
 
                     <label>Mobile</label>
-                    <input type="text" value="8849593953">
+                    <input type="text" id="mobile" value="@Model.PhoneNumber" disabled>
 
                     <label>Username</label>
-                    <input type="text" value="abcd@gmail.com">
+                    <input type="text" id="username" value="@Model.UserName" disabled>
                 </div>
 
                 <div class="info-section">
                     <h3>Personal Details</h3>
                     <label>Name</label>
-                    <input type="text" value="Miraliba Jadeja">
+                    <input type="text" id="fullName" value="@Model.FullName" disabled>
 
                     <label>Gender</label>
-                    <input type="text" value="Female">
+                    <input type="text" id="gender" value="@Model.Gender" disabled>
 
                     <label>Date of Birth</label>
-                    <input type="text" value="DD/MM/YYYY">
+                    <input type="text" id="dateOfBirth" value="@Model.DateOfBirth" disabled>
 
                     <label>Address</label>
-                    <input type="text" value="asdv, dfsd, fdfdsdfdsfd, 332434">
+                    <input type="text" id="address" value="@Model.Address" disabled>
                 </div>
                 <div>
                 <h2>Driving License Information</h2>
                     <div class="License" id="driving-license">
-                    <label>License No</label>
-                    <input type="text" name="name" value="abcd@gmail.com">
+                        <label>License No</label>
+                        <input type="text" id="licenseNo" value="@Model.LicenseNo" disabled>
 
-                    <label>Issue State</label>
-                    <input type="text" name="name" value="9892933823">
+                        <label>Issue State</label>
+                        <input type="text" id="issueState" value="@Model.IssueState" disabled>
 
-                    <lablel>Expiry Date</lablel>
-                    <input type="text" name="name" value="DD/MM/YYYY">
+                        <label>Expiry Date</label>
+                        <input type="text" id="expiryDate" value="@Model.ExpiryDate" disabled>
 
-                    <label>Upload Photo</label>
-                    <input type="text" name="name" value="" />
+                        <label>Upload Photo</label>
+                        <input type="text" id="uploadPhoto" value="@Model.UploadPhoto" disabled>
                     </div>
 
                     <!-- Payment and Billing Section -->
@@ -375,12 +375,12 @@
                         <h3>PAYTM WALLET</h3>
                         <p>Wallet Status : <span style="font-weight: bold;">Not Linked</span></p>
                         <button class="link-wallet">Link Wallet</button>
-
                         <div class="balance-section">
                             <span>Balance</span>
                             <span>💰 0</span>
                         </div>
                     </div>
+
 
                     <!-- Transactions -->
                     <div class="info-section">
@@ -451,9 +451,50 @@
                 </div>
                 </div>
                 
-            </div>
+            </div>  
         </div>
     </section>
+
+    <script>
+        function enableEdit() {
+            document.querySelectorAll('input').forEach(input => {
+                input.disabled = false;
+            });
+        }
+
+        function saveChanges() {
+            document.querySelectorAll('input').forEach(input => {
+                input.disabled = true;
+            });
+
+            // Collect the data and send it to the server to update the database
+            const data = {
+                FullName: document.getElementById('fullName').value,
+                Gender: document.getElementById('gender').value,
+                DateOfBirth: document.getElementById('dateOfBirth').value,
+                Address: document.getElementById('address').value,
+                LicenseNo: document.getElementById('licenseNo').value,
+                IssueState: document.getElementById('issueState').value,
+                ExpiryDate: document.getElementById('expiryDate').value,
+                UploadPhoto: document.getElementById('uploadPhoto').value
+            };
+
+            fetch('/AfterLogin/UpdateProfile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Profile updated successfully!');
+                    } else {
+                        alert('Failed to update profile.');
+                    }
+                });
+        }
+    </script>
 
 </body>
 </html>
