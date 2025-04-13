@@ -12,6 +12,7 @@ namespace ZUVO_MVC_.Models
         public string IssueState { get; set; }
         public string ExpiryDate { get; set; }
         public string UploadPhoto { get; set; }
+        public string ProfilePicPath { get; set; }
 
     }
 }

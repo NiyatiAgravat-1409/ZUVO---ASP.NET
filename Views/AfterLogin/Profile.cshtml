@@ -1,8 +1,7 @@
 ﻿@{
     Layout = null;
 }
-
-
+@model ZUVO_MVC_.Models.Users;
 @{
     ViewData["Title"] = "Profile";
 }
@@ -12,7 +11,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
     <style>
         html, body {
             margin: 0;
@@ -33,21 +31,25 @@
             padding: 20px;
             box-sizing: border-box;
             height: 100vh;
-            position: fixed; /* Make it fixed */
+            position: fixed;
             top: 0;
             left: 0;
+            text-align: center;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         .main-content {
-            margin-left: 25%; /* Match the sidebar width */
+            margin-left: 25%;
             width: 75%;
             height: 100vh;
             overflow-y: auto;
             background: #D9C9A3;
             padding: 20px;
             box-sizing: border-box;
+            border-radius: 10px;
         }
-        /* Navbar styling */
+
         .navbar {
             background-color: #D9C9A3;
             padding: 10px 20px;
@@ -56,7 +58,6 @@
             align-items: center;
         }
 
-        /* Container for flex layout */
         .container {
             width: 100%;
             display: flex;
@@ -64,7 +65,6 @@
             align-items: center;
         }
 
-        /* Logo and title */
         .logo-section {
             display: flex;
             align-items: center;
@@ -80,7 +80,6 @@
             margin-left: 10px;
         }
 
-        /* Right-side buttons */
         .nav-buttons {
             display: flex;
             align-items: center;
@@ -101,29 +100,10 @@
                 background-color: #2B1D13;
             }
 
-        /* Profile icon */
         .profile-icon {
             height: 40px;
             cursor: pointer;
             border-radius: 50%;
-        }
-        /* Profile Page Container */
-        .profile-container {
-            display: flex;
-            height: 100vh; /* Full height of the viewport */
-            overflow: hidden;
-        }
-        /* Sidebar */
-        .sidebar {
-            width: 25%;
-            background: #E2D1AC;
-            padding: 20px;
-            text-align: center;
-            border-radius: 10px;
-            height: 100vh; /* Make sidebar full height */
-            position: sticky;
-            top: 0;
-            overflow: hidden;
         }
 
         .profile-pic img {
@@ -168,30 +148,12 @@
             text-align: left;
         }
 
-        /* Main Content */
-        .main-content {
-            width: 75%;
-            padding: 20px;
-            background: #D9C9A3;
-            border-radius: 10px;
-            margin-left: 20px;
-            overflow-y: auto;
-            height: 100vh; /* Same as sidebar */
-        }
-
         h2 {
             text-align: center;
             color: #3D2C1D;
         }
 
-        .info-section {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .License{
+        .info-section, .License {
             background: white;
             padding: 15px;
             border-radius: 10px;
@@ -218,7 +180,6 @@
             margin-top: 5px;
         }
 
-        /* Payment and Billing Section */
         .link-wallet {
             background: #3D2C1D;
             color: white;
@@ -240,7 +201,6 @@
             margin-top: 10px;
         }
 
-        /* Transactions */
         .transaction {
             display: flex;
             align-items: center;
@@ -271,47 +231,39 @@
             border-radius: 5px;
             font-size: 12px;
         }
-
-        
     </style>
 </head>
 <body>
-    <!--Navbar-->
     <section>
-    <nav class="navbar">
-        <div class="container">
-            <!-- Logo & Title -->
-            <div class="logo-section">
-                <img src="~/images/Designer__2_-removebg-preview 1.png" alt="Zuvo Logo" class="logo">
-                <span class="title">My Account</span>
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo-section">
+                    <img src="~/images/Designer__2_-removebg-preview 1.png" alt="Zuvo Logo" class="logo">
+                    <span class="title">My Account</span>
+                </div>
+                <div class="nav-buttons">
+                    <a asp-controller="Host" asp-action="BecomeHost">
+                        <button class="btn">Become a Host</button>
+                    </a>
+                    <a asp-controller="Account" asp-action="Profile">
+                        <img src="~/images/Account circle.png" alt="Profile" class="profile-icon">
+                    </a>
+                </div>
             </div>
-
-            <!-- Right-side Buttons -->
-            <div class="nav-buttons">
-                <a asp-controller="Host" asp-action="BecomeHost">
-                <button class="btn">Become a Host</button>
-                </a>
-                <button class="btn">Name</button>
-                <a asp-controller="Account" asp-action="Profile">
-                    <img src="~/images/Account circle.png" alt="Profile" class="profile-icon">
-                </a>
-            </div>
-        </div>
-    </nav>
+        </nav>
     </section>
     <section id="profile">
         <div class="profile-container profile-page">
-            <!-- Sidebar -->
             <div class="sidebar">
                 <div class="profile-pic">
-                    <img src="~/images/Account circle.png" alt="Profile Picture">
-                    <h3>@Model.FullName</h3>
-                    <p>@Model.PhoneNumber</p>
-                    <p>@Model.Email</p>
+                    <img src="@(Model?.ProfilePicPath?? "~/images/Account circle.png" )" alt="Profile Picture" onclick="openModal()">
+                    <h3>@(Model?.FullName ?? "Name not available")</h3>
+                    <p>@(Model?.PhoneNumber ?? "Phone number not available")</p>
+                    <p>@(Model?.Email ?? "Email not available")</p>
                 </div>
                 <div class="edit-icons">
-                    <button class="edit-btn" onclick="enableEdit()">✎</button>
-                    <button class="verify-btn" onclick="saveChanges()">✔</button>
+                    <button class="edit-btn" onclick="enableEdit()" aria-label="Edit Profile">✎</button>
+                    <button class="verify-btn" onclick="saveChanges()" aria-label="Save Changes">✔</button>
                 </div>
                 <nav class="side-nav">
                     <button class="nav-btn" onclick="scrollToSection('personal-info')">Personal Information</button>
@@ -319,103 +271,54 @@
                     <button class="nav-btn" onclick="scrollToSection('payment-billing')">Payment & Billing</button>
                     <button class="nav-btn" onclick="scrollToSection('bookings')">Bookings</button>
                 </nav>
-
             </div>
-
-            <!-- Main Content -->
             <div class="main-content">
                 <h2>Personal Information</h2>
-
                 <div class="info-section" id="personal-info">
                     <h3>Account Details</h3>
                     <label>Email</label>
-                    <input type="email" id="email" value="@Model.Email" disabled>
-
+                    <input type="email" id="email" value="@(Model?.Email ?? "Not available")" disabled />
                     <label>Mobile</label>
-                    <input type="text" id="mobile" value="@Model.PhoneNumber" disabled>
-
+                    <input type="text" id="mobile" value="@(Model?.PhoneNumber ?? "Not available")" disabled />
                     <label>Username</label>
-                    <input type="text" id="username" value="@Model.UserName" disabled>
+                    <input type="text" id="username" value="@(Model?.UserName ?? "Not available")" disabled />
                 </div>
-
                 <div class="info-section">
                     <h3>Personal Details</h3>
                     <label>Name</label>
-                    <input type="text" id="fullName" value="@Model.FullName" disabled>
-
+                    <input type="text" id="fullName" value="@(Model?.FullName ?? "Not available")" disabled />
                     <label>Gender</label>
-                    <input type="text" id="gender" value="@Model.Gender" disabled>
-
+                    <input type="text" id="gender" value="@(Model?.Gender ?? "Not available")" disabled />
                     <label>Date of Birth</label>
-                    <input type="text" id="dateOfBirth" value="@Model.DateOfBirth" disabled>
-
+                    <input type="text" id="dateOfBirth" value="@(Model?.DateOfBirth??"Not availaible")" disabled />
                     <label>Address</label>
-                    <input type="text" id="address" value="@Model.Address" disabled>
+                    <input type="text" id="address" value="@(Model?.Address ?? "Not available")" disabled />
                 </div>
-                <div>
                 <h2>Driving License Information</h2>
-                    <div class="License" id="driving-license">
-                        <label>License No</label>
-                        <input type="text" id="licenseNo" value="@Model.LicenseNo" disabled>
-
-                        <label>Issue State</label>
-                        <input type="text" id="issueState" value="@Model.IssueState" disabled>
-
-                        <label>Expiry Date</label>
-                        <input type="text" id="expiryDate" value="@Model.ExpiryDate" disabled>
-
-                        <label>Upload Photo</label>
-                        <input type="text" id="uploadPhoto" value="@Model.UploadPhoto" disabled>
-                    </div>
-
-                    <!-- Payment and Billing Section -->
-                    <h2>Payment And Billing</h2>
-
-                    <div class="info-section" id="payment-billing">
-                        <h3>PAYTM WALLET</h3>
-                        <p>Wallet Status : <span style="font-weight: bold;">Not Linked</span></p>
-                        <button class="link-wallet">Link Wallet</button>
-                        <div class="balance-section">
-                            <span>Balance</span>
-                            <span>💰 0</span>
-                        </div>
-                    </div>
-
-
-                    <!-- Transactions -->
-                    <div class="info-section">
-                        <h3>Transactions</h3>
-
-                        <div class="info-section" id="bookings">
-                            <img src="~/images/Blue_baleno.png" alt="Car Rental">
-                            <div class="transaction-details">
-                                <p><b>12345667</b></p>
-                                <p>26 Jan – 28 Jan</p>
-                                <p>5000 Paid</p>
-                                <p>Paypal</p>
-                            </div>
-                            <button class="download-invoice">Download Invoice</button>
-                        </div>
-
-                        <div class="transaction">
-                            <img src="~/images/grey_ertiga-removebg-preview 1.png " alt="Car Rental">
-                            <div class="transaction-details">
-                                <p><b>12345667</b></p>
-                                <p>26 Jan – 28 Jan</p>
-                                <p>5000 Paid</p>
-                                <p>Paypal</p>
-                            </div>
-                            <button class="download-invoice">Download Invoice</button>
-                        </div>
-                    </div>
-
-                   
+                <div class="License" id="driving-license">
+                    <label>License No</label>
+                    <input type="text" id="licenseNo" value="@(Model?.LicenseNo ?? "Not available")" disabled />
+                    <label>Issue State</label>
+                    <input type="text" id="issueState" value="@(Model?.IssueState ?? "Not available")" disabled />
+                    <label>Expiry Date</label>
+                    <input type="text" id="expiryDate" value="@(Model?.ExpiryDate ?? "Not available")" disabled />
+                    <label>Upload Photo</label>
+                    <input type="text" id="uploadPhoto" value="@(Model?.UploadPhoto ?? "Not available")" disabled />
                 </div>
-
-                <div>
-                    <h2>Bookings</h2>
-                    <div class="transaction">
-                        <img src="~/images/grey_ertiga-removebg-preview 1.png " alt="Car Rental">
+                <h2>Payment And Billing</h2>
+                <div class="info-section" id="payment-billing">
+                    <h3>PAYTM WALLET</h3>
+                    <p>Wallet Status : <span style="font-weight: bold;">Not Linked</span></p>
+                    <button class="link-wallet">Link Wallet</button>
+                    <div class="balance-section">
+                        <span>Balance</span>
+                        <span>💰 0</span>
+                    </div>
+                </div>
+                <div class="info-section">
+                    <h3>Transactions</h3>
+                    <div class="transaction" id="bookings">
+                        <img src="~/images/Blue_baleno.png" alt="Car Rental">
                         <div class="transaction-details">
                             <p><b>12345667</b></p>
                             <p>26 Jan – 28 Jan</p>
@@ -424,9 +327,8 @@
                         </div>
                         <button class="download-invoice">Download Invoice</button>
                     </div>
-
                     <div class="transaction">
-                        <img src="~/images/grey_ertiga-removebg-preview 1.png " alt="Car Rental">
+                        <img src="~/images/grey_ertiga-removebg-preview 1.png" alt="Car Rental">
                         <div class="transaction-details">
                             <p><b>12345667</b></p>
                             <p>26 Jan – 28 Jan</p>
@@ -436,9 +338,29 @@
                         <button class="download-invoice">Download Invoice</button>
                     </div>
                 </div>
-
+                <h2>Bookings</h2>
                 <div class="transaction">
-                    <img src="~/images/grey_ertiga-removebg-preview 1.png " alt="Car Rental">
+                    <img src="~/images/grey_ertiga-removebg-preview 1.png" alt="Car Rental">
+                    <div class="transaction-details">
+                        <p><b>12345667</b></p>
+                        <p>26 Jan – 28 Jan</p>
+                        <p>5000 Paid</p>
+                        <p>Paypal</p>
+                    </div>
+                    <button class="download-invoice">Download Invoice</button>
+                </div>
+                <div class="transaction">
+                    <img src="~/images/grey_ertiga-removebg-preview 1.png" alt="Car Rental">
+                    <div class="transaction-details">
+                        <p><b>12345667</b></p>
+                        <p>26 Jan – 28 Jan</p>
+                        <p>5000 Paid</p>
+                        <p>Paypal</p>
+                    </div>
+                    <button class="download-invoice">Download Invoice</button>
+                </div>
+                <div class="transaction">
+                    <img src="~/images/grey_ertiga-removebg-preview 1.png" alt="Car Rental">
                     <div class="transaction-details">
                         <p><b>12345667</b></p>
                         <p>26 Jan – 28 Jan</p>
@@ -448,13 +370,8 @@
                     <button class="download-invoice">Download Invoice</button>
                 </div>
             </div>
-                </div>
-                </div>
-                
-            </div>  
         </div>
     </section>
-
     <script>
         function enableEdit() {
             document.querySelectorAll('input').forEach(input => {
@@ -462,14 +379,16 @@
             });
         }
 
-        function saveChanges() {
+         function saveChanges() {
             document.querySelectorAll('input').forEach(input => {
                 input.disabled = true;
             });
 
-            // Collect the data and send it to the server to update the database
             const data = {
                 FullName: document.getElementById('fullName').value,
+                PhoneNumber: document.getElementById('mobile').value,
+                Email: document.getElementById('email').value,
+                UserName: document.getElementById('username').value,
                 Gender: document.getElementById('gender').value,
                 DateOfBirth: document.getElementById('dateOfBirth').value,
                 Address: document.getElementById('address').value,
@@ -492,9 +411,18 @@
                     } else {
                         alert('Failed to update profile.');
                     }
+                }).catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while updating the profile.');
                 });
         }
-    </script>
 
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {  
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
 </body>
 </html>
