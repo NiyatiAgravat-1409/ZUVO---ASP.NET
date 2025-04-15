@@ -426,7 +426,7 @@
             <a href="#book-section">Book</a>
             <a href="#about-section">About</a>
             <a href="#vehicle-models">Vehicle Models</a>
-            <a href="#contact">Contact</a>
+            <a asp-controller="AfterLogin" asp-action="Contact">Contact</a>
             <a asp-controller="Host" asp-action="BecomeHost">Become a Host</a>
         </ul>
             
@@ -436,7 +436,7 @@
             </div>
            <div>
                 <a asp-controller="AfterLogin" asp-action="Profile">
-                <img src="~/images/Account circle.png" alt="User" height="40px" width="40px">   
+                <img src="@Url.Content(ViewData["ProfilePicPath"]?.ToString() ?? "~/images/Account circle.png")" alt="User" height="40px" width="40px" style="border-radius : 50%">   
                 </a>
             </div>
             </div>
@@ -508,7 +508,7 @@
             <h1>Reliable cars, remarkable journeys.</h1>
             <p>
                 Your trusted partner for reliable and affordable car rental services.
-                Whether you’re planning a business trip, a weekend getaway, or simply need a vehicle for your daily commute,
+                Whether you're planning a business trip, a weekend getaway, or simply need a vehicle for your daily commute,
                 we are here to make your journey seamless and enjoyable.
             </p>
         </div>
@@ -599,7 +599,7 @@
             </div>
 
             <div class="support-text">
-                For Help and Support <a href="#">Click Here</a>
+                For Help and Support <a asp-controller="AfterLogin" asp-action="Contact">Click Here</a>
             </div>
         </div>
 </body>
