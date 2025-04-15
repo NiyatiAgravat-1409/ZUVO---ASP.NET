@@ -26,6 +26,13 @@ builder.Services.AddIdentity<Users, IdentityRole>(options =>
 
 var app = builder.Build();
 
+// Ensure uploads directory exists
+var uploadsPath = Path.Combine(builder.Environment.WebRootPath, "uploads", "profile-pics");
+if (!Directory.Exists(uploadsPath))
+{
+    Directory.CreateDirectory(uploadsPath);
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
