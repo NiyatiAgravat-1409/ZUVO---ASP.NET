@@ -1,9 +1,11 @@
-﻿@{
+﻿@model ZUVO_MVC_.ViewModels.CarViewModel
+
+@{
     Layout = null;
 }
 
 @{
-    ViewData["Title"] = "Add Your Car Details";
+    ViewData["Title"] = "List Your Car";
 }
 
 <style>
@@ -161,7 +163,76 @@
             background: #3D3229;
         }
 
+    .photo-upload-container {
+        margin-top: 20px;
+    }
 
+    .photo-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .photo-preview-item {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .photo-preview-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .photo-preview-item .remove-photo {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(255, 0, 0, 0.7);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .custom-file-upload {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #3D3229;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 10px;
+    }
+
+    .custom-file-upload:hover {
+        background-color: #2a221b;
+    }
+
+    #photoInput {
+        display: none;
+    }
+
+    .upload-progress {
+        margin-top: 10px;
+        display: none;
+    }
+
+    .upload-status {
+        margin-top: 5px;
+        font-size: 14px;
+        color: green;
+    }
 </style>
 
 <div class="navbar">
@@ -172,122 +243,305 @@
     </a>
 </div>
 
+<div class="container mt-4">
+    <form asp-controller="Host" asp-action="Listyourcar" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<div class="container">
-    <div class="section">
-        <h2>CAR INFORMATION</h2>
-        <label>Car Model</label>
-        <input type="text">
-        <label>Year</label>
-        <input type="number">
-        <label>Color</label>
-        <input type="text">
-        <label>License Plate No.</label>
-        <input type="text">
-        <label>VIN</label>
-        <input type="text">
-    </div>
+        <div class="section">
+            <h2>CAR INFORMATION</h2>
+            <div class="form-group">
+                <label asp-for="Make" class="control-label"></label>
+                <input asp-for="Make" class="form-control" />
+                <span asp-validation-for="Make"  class="text-danger"></span>
+            </div>
 
-    <div class="section">
-        <h2>PHOTOS AND VIDEOS</h2>
-        <p>Upload multiple car photos : Front, back, interior, and any unique features</p>
-        <div class="file-upload">
-            <button>Choose File</button>
-            <p class="file-info">File should be less than 20MB and .jpg or .png only</p>
-        </div>
-        <p>Upload video: Short video showcasing the car</p>
-        <div class="file-upload">
-            <button>Choose File</button>
-            <p class="file-info">File should be less than 40MB and .mp4 or .mkv only</p>
-        </div>
-    </div>
+            <div class="form-group">
+                <label asp-for="Model" class="control-label"></label>
+                <input asp-for="Model" class="form-control" />
+                <span asp-validation-for="Model" class="text-danger"></span>
+            </div>
 
-    <div class="section">
-        <h2>RENTAL DETAILS</h2>
-        <label>Rental Price</label>
-        <input type="text" placeholder="₹ /day">
-        <label>Cancellation</label>
-        <div class="radio-group">
-            <input type="radio" name="cancel" value="yes"> Yes
-            <input type="radio" name="cancel" value="no"> No
-        </div>
-        <label>Min Period</label>
-        <input type="number" placeholder="days">
-    </div>
+            <div class="form-group">
+                <label asp-for="Year" class="control-label"></label>
+                <input asp-for="Year" class="form-control" />
+                <span asp-validation-for="Year" class="text-danger"></span>
+            </div>
 
-    <div class="section">
-        <h2>CAR FEATURES</h2>
-        <label>Mileage</label>
-        <input type="text">
-        <label>Fuel Types</label>
-        <input type="text">
-        <label>Number of Seats</label>
-        <input type="number">
-        <label>Additional Features</label>
-        <input type="text">
-    </div>
+            <div class="form-group">
+                <label asp-for="Color" class="control-label"></label>
+                <input asp-for="Color" class="form-control" />
+                <span asp-validation-for="Color" class="text-danger"></span>
+            </div>
 
+            <div class="form-group">
+                <label asp-for="LicensePlateNo" class="control-label"></label>
+                <input asp-for="LicensePlateNo" class="form-control" />
+                <span asp-validation-for="LicensePlateNo" class="text-danger"></span>
+            </div>
 
-    <div class="section"> 
-
-        <div class="section-title">SAFETY AND INSURANCE</div>
-
-        <div class="form-group">
-            <label>Insurance Type</label>
-            <input type="text" placeholder="Enter insurance type">
-        </div>
-
-        <div class="form-group">
-            <label>Insurance No</label>
-            <input type="text" placeholder="Enter insurance number">
-        </div>
-
-        <div class="form-group">
-            <label>Insurance Company</label>
-            <input type="text" placeholder="Enter insurance company">
-        </div>
-
-        <div class="section-title">OWNER INFORMATION</div>
-
-        <div class="form-group">
-            <label>Name</label>
-            <input type="text" placeholder="Enter owner's name">
-        </div>
-
-        <div class="form-group">
-            <label>Contact No</label>
-            <input type="text" placeholder="Enter contact number">
-        </div>
-
-        <div class="form-group">
-            <label>Profile Picture</label>
-            <div class="file-upload">
-                <input type="file">
+            <div class="form-group">
+                <label asp-for="VIN" class="control-label"></label>
+                <input asp-for="VIN" class="form-control" />
+                <span asp-validation-for="VIN" class="text-danger"></span>
             </div>
         </div>
 
-        <div class="section-title">LEGAL AND DOCUMENTATION</div>
+        <div class="section">
+            <h2>CAR FEATURES</h2>
+            <div class="form-group">
+                <label asp-for="Transmission" class="control-label"></label>
+                <input asp-for="Transmission" class="form-control" />
+                <span asp-validation-for="Transmission" class="text-danger"></span>
+            </div>
 
-        <div class="form-group">
-            <label>Car Registration Document</label>
-            <div class="file-upload">
-                <input type="file">
-                <p class="file-hint">file should be less than 20MB and .jpg and .png only</p>
+            <div class="form-group">
+                <label asp-for="FuelType" class="control-label"></label>
+                <input asp-for="FuelType" class="form-control" />
+                <span asp-validation-for="FuelType" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Seats" class="control-label"></label>
+                <input asp-for="Seats" class="form-control" />
+                <span asp-validation-for="Seats" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Mileage" class="control-label"></label>
+                <input asp-for="Mileage" class="form-control" />
+                <span asp-validation-for="Mileage" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AdditionalFeatures" class="control-label"></label>
+                <input asp-for="AdditionalFeatures" class="form-control" />
+                <span asp-validation-for="AdditionalFeatures" class="text-danger"></span>
             </div>
         </div>
 
-        <div class="form-group">
-            <label>Insurance Certificate</label>
-            <div class="file-upload">
-                <input type="file">
-                <p class="file-hint">file should be less than 20MB and .jpg and .png only</p>
+        <div class="section">
+            <h2>RENTAL DETAILS</h2>
+            <div class="form-group">
+                <label asp-for="DailyRate" class="control-label"></label>
+                <input asp-for="DailyRate" class="form-control" />
+                <span asp-validation-for="DailyRate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AllowCancellation" class="control-label"></label>
+                <div class="radio-group">
+                    <input type="radio" asp-for="AllowCancellation" value="true" /> Yes
+                    <input type="radio" asp-for="AllowCancellation" value="false" /> No
+                </div>
+                <span asp-validation-for="AllowCancellation" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MinRentalPeriod" class="control-label"></label>
+                <input asp-for="MinRentalPeriod" class="form-control" />
+                <span asp-validation-for="MinRentalPeriod" class="text-danger"></span>
             </div>
         </div>
 
-        <button class="submit-btn">SUBMIT</button>
+        <div class="section">
+            <h2>SAFETY AND INSURANCE</h2>
+            <div class="form-group">
+                <label asp-for="InsuranceType" class="control-label"></label>
+                <input asp-for="InsuranceType" class="form-control" />
+                <span asp-validation-for="InsuranceType" class="text-danger"></span>
+            </div>
 
-    </div>
+            <div class="form-group">
+                <label asp-for="InsuranceNumber" class="control-label"></label>
+                <input asp-for="InsuranceNumber" class="form-control" />
+                <span asp-validation-for="InsuranceNumber" class="text-danger"></span>
+            </div>
 
-    
+            <div class="form-group">
+                <label asp-for="InsuranceCompany" class="control-label"></label>
+                <input asp-for="InsuranceCompany" class="form-control" />
+                <span asp-validation-for="InsuranceCompany" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>DOCUMENTS</h2>
+            <div class="form-group">
+                <label asp-for="CarRegistrationDocument" class="control-label"></label>
+                <div class="file-upload">
+                    <input asp-for="CarRegistrationDocument" type="file" class="form-control" accept=".pdf,.jpg,.png" />
+                    <p class="file-hint">File should be less than 20MB and .pdf, .jpg, or .png only</p>
+                </div>
+                <span asp-validation-for="CarRegistrationDocument" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="InsuranceCertificate" class="control-label"></label>
+                <div class="file-upload">
+                    <input asp-for="InsuranceCertificate" type="file" class="form-control" accept=".pdf,.jpg,.png" />
+                    <p class="file-hint">File should be less than 20MB and .pdf, .jpg, or .png only</p>
+                </div>
+                <span asp-validation-for="InsuranceCertificate" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>PHOTOS</h2>
+            <div class="form-group">
+                <label class="control-label">Car Photos</label>
+                <div class="photo-upload-container">
+                    <label for="photoInput" class="custom-file-upload">
+                        <i class="fas fa-camera"></i> Add Photo
+                    </label>
+                    <input id="photoInput" type="file" accept="image/*" />
+                    <div class="upload-progress">
+                        <progress value="0" max="100"></progress>
+                        <div class="upload-status"></div>
+                    </div>
+                    <div class="photo-preview" id="photoPreview"></div>
+                    <input type="hidden" asp-for="Photos" id="uploadedPhotos" />
+                    <span asp-validation-for="Photos" class="text-danger"></span>
+                    <p class="file-hint">Upload photos one by one. The first photo will be used as the primary image.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mt-4">
+            <button type="submit" class="submit-btn">SUBMIT</button>
+        </div>
+    </form>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        let uploadedPhotoIds = [];
+
+                document.addEventListener('DOMContentLoaded', function() {
+            let uploadedPhotoIds = [];
+            const photoInput = document.getElementById('photoInput');
+            const uploadedPhotosInput = document.getElementById('uploadedPhotos');
+            const photoPreview = document.getElementById('photoPreview');
+
+            // Ensure elements exist
+            if (!photoInput || !uploadedPhotosInput || !photoPreview) {
+                console.error('Required elements not found');
+                return;
+            }
+
+            // Get anti-forgery token
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+            if (!token) {
+                console.error('Anti-forgery token not found');
+            }
+
+            photoInput.addEventListener('change', async function(e) {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+
+                    // Validate file type and size
+                    if (!file.type.match('image.*')) {
+                        alert('Please select an image file');
+                        return;
+                    }
+                    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                        alert('Image must be less than 5MB');
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('photo', file);
+
+                    // Show progress
+                    const progressDiv = document.querySelector('.upload-progress');
+                    const progressBar = progressDiv.querySelector('progress');
+                    const statusDiv = document.querySelector('.upload-status');
+                    progressDiv.style.display = 'block';
+                    progressBar.value = 0;
+                    statusDiv.textContent = 'Uploading...';
+
+                    try {
+                        const response = await fetch('/Host/UploadPhoto', {
+                            method: 'POST',
+                            body: formData,
+                            headers: token ? {
+                                'RequestVerificationToken': token
+                            } : {}
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        const result = await response.json();
+                        if (!result.photoId) {
+                            throw new Error('No photoId in response');
+                        }
+
+                        uploadedPhotoIds.push(result.photoId);
+                        uploadedPhotosInput.value = JSON.stringify(uploadedPhotoIds);
+
+                        // Add to preview
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const div = document.createElement('div');
+                            div.className = 'photo-preview-item';
+                            div.dataset.photoId = result.photoId;
+
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+
+                            const removeBtn = document.createElement('button');
+                            removeBtn.className = 'remove-photo';
+                            removeBtn.innerHTML = '×';
+                            removeBtn.onclick = async function() {
+                                try {
+                                    const deleteResponse = await fetch(`/Host/DeletePhoto/${result.photoId}`, {
+                                        method: 'DELETE',
+                                        headers: token ? {
+                                            'RequestVerificationToken': token
+                                        } : {}
+                                    });
+
+                                    if (deleteResponse.ok) {
+                                        div.remove();
+                                        uploadedPhotoIds = uploadedPhotoIds.filter(id => id !== result.photoId);
+                                        uploadedPhotosInput.value = JSON.stringify(uploadedPhotoIds);
+                                    } else {
+                                        throw new Error('Delete failed');
+                                    }
+                                } catch (error) {
+                                    console.error('Error deleting photo:', error);
+                                    alert('Failed to delete photo. Please try again.');
+                                }
+                            };
+
+                            div.appendChild(img);
+                            div.appendChild(removeBtn);
+                            photoPreview.appendChild(div);
+                        };
+                        reader.readAsDataURL(file);
+
+                        statusDiv.textContent = 'Upload successful!';
+                        progressBar.value = 100;
+                    } catch (error) {
+                        console.error('Error uploading photo:', error);
+                        statusDiv.textContent = 'Upload failed: ' + (error.message || 'Please try again');
+                        statusDiv.style.color = 'red';
+                    } finally {
+                        this.value = '';
+                        setTimeout(() => {
+                            progressDiv.style.display = 'none';
+                        }, 3000);
+                    }
+                }
+            });
+
+            // Ensure photos are included when form submits
+            document.querySelector('form')?.addEventListener('submit', function() {
+                uploadedPhotosInput.value = JSON.stringify(uploadedPhotoIds);
+            });
+        });
+    </script>
+}
 </html>

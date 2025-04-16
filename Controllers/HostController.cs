@@ -14,6 +14,9 @@ using ZUVO_MVC_.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using ZUVO_MVC_.Data;
 using Microsoft.AspNetCore.Authentication;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using System.Text.Json;
 
 namespace ZUVO_MVC_.Controllers
 {
@@ -280,9 +283,147 @@ namespace ZUVO_MVC_.Controllers
             return View();
         }
 
+        [Authorize(AuthenticationSchemes = "HostAuth")]
+        [HttpGet]
         public IActionResult Listyourcar()
         {
             return View();
+        }
+
+        [Authorize(AuthenticationSchemes = "HostAuth")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Listyourcar(CarViewModel model)
+        {
+            _logger.LogInformation("Starting Listyourcar action");
+            
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Model validation failed. Errors: {Errors}", 
+                    string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+                return View(model);
+            }
+
+            try
+            {
+                var hostId = User.FindFirst("HostId")?.Value;
+                if (string.IsNullOrEmpty(hostId))
+                {
+                    _logger.LogWarning("HostId not found in claims");
+                    return RedirectToAction("HostSignin");
+                }
+
+                _logger.LogInformation("Creating new car for host: {HostId}", hostId);
+
+                // Create new car
+                var car = new Car
+                {
+                    HostId = hostId,
+                    Make = model.Make,
+                    Model = model.Model,
+                    Year = model.Year,
+                    Color = model.Color,
+                    LicensePlateNo = model.LicensePlateNo,
+                    VIN = model.VIN,
+                    Transmission = model.Transmission,
+                    FuelType = model.FuelType,
+                    Seats = model.Seats,
+                    DailyRate = model.DailyRate,
+                    Description = model.Description,
+                    AllowCancellation = model.AllowCancellation,
+                    MinRentalPeriod = model.MinRentalPeriod,
+                    Mileage = model.Mileage,
+                    AdditionalFeatures = model.AdditionalFeatures,
+                    InsuranceType = model.InsuranceType,
+                    InsuranceNumber = model.InsuranceNumber,
+                    InsuranceCompany = model.InsuranceCompany,
+                    IsAvailable = true,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _logger.LogInformation("Adding car to context: {@Car}", car);
+                _context.Cars.Add(car);
+
+                // Save car first to get the CarId
+                _logger.LogInformation("Saving car to database");
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Car saved successfully with ID: {CarId}", car.CarId);
+
+                // Handle document uploads
+                if (model.CarRegistrationDocument != null && model.CarRegistrationDocument.Length > 0)
+                {
+                    _logger.LogInformation("Processing car registration document");
+                    var docFileName = $"{Guid.NewGuid()}{Path.GetExtension(model.CarRegistrationDocument.FileName)}";
+                    var docFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "documents", docFileName);
+                    
+                    Directory.CreateDirectory(Path.GetDirectoryName(docFilePath));
+                    
+                    using (var stream = new FileStream(docFilePath, FileMode.Create))
+                    {
+                        await model.CarRegistrationDocument.CopyToAsync(stream);
+                    }
+                    
+                    car.CarRegistrationDocumentPath = $"/uploads/documents/{docFileName}";
+                    _logger.LogInformation("Car registration document saved: {Path}", car.CarRegistrationDocumentPath);
+                }
+
+                if (model.InsuranceCertificate != null && model.InsuranceCertificate.Length > 0)
+                {
+                    _logger.LogInformation("Processing insurance certificate");
+                    var certFileName = $"{Guid.NewGuid()}{Path.GetExtension(model.InsuranceCertificate.FileName)}";
+                    var certFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "documents", certFileName);
+                    
+                    Directory.CreateDirectory(Path.GetDirectoryName(certFilePath));
+                    
+                    using (var stream = new FileStream(certFilePath, FileMode.Create))
+                    {
+                        await model.InsuranceCertificate.CopyToAsync(stream);
+                    }
+                    
+                    car.InsuranceCertificatePath = $"/uploads/documents/{certFileName}";
+                    _logger.LogInformation("Insurance certificate saved: {Path}", car.InsuranceCertificatePath);
+                }
+
+                // Link uploaded photos to the car
+                if (!string.IsNullOrEmpty(model.Photos))
+                {
+                    _logger.LogInformation("Processing photos: {Photos}", model.Photos);
+                    try
+                    {
+                        var photoIds = System.Text.Json.JsonSerializer.Deserialize<List<string>>(model.Photos);
+                        if (photoIds != null && photoIds.Count > 0)
+                        {
+                            _logger.LogInformation("Found {Count} photos to link", photoIds.Count);
+                            var photos = await _context.CarPhotos
+                                .Where(p => photoIds.Contains(p.PhotoId))
+                                .ToListAsync();
+
+                            foreach (var photo in photos)
+                            {
+                                photo.CarId = car.CarId;
+                                photo.IsPrimary = photos.IndexOf(photo) == 0;
+                                _logger.LogInformation("Linked photo {PhotoId} to car {CarId}", photo.PhotoId, car.CarId);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Error processing photos: {Photos}", model.Photos);
+                    }
+                }
+
+                _logger.LogInformation("Saving final changes to database");
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("All changes saved successfully");
+
+                return RedirectToAction("HostDashboard");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error listing car. Model: {@Model}", model);
+                ModelState.AddModelError("", "An error occurred while listing your car. Please try again.");
+                return View(model);
+            }
         }
 
         public IActionResult HostProfile()
@@ -293,6 +434,84 @@ namespace ZUVO_MVC_.Controllers
         public IActionResult EditCarDetails()
         {
             return View();
+        }
+
+        [Authorize(AuthenticationSchemes = "HostAuth")]
+        [HttpPost]
+        public async Task<IActionResult> UploadPhoto(IFormFile photo)
+        {
+            try
+            {
+                if (photo == null || photo.Length == 0)
+                {
+                    return BadRequest("No photo uploaded");
+                }
+
+                // Generate unique filename
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(photo.FileName)}";
+                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "cars", fileName);
+
+                // Ensure directory exists
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+                // Save file
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await photo.CopyToAsync(stream);
+                }
+
+                // Create temporary photo record
+                var carPhoto = new CarPhoto
+                {
+                    PhotoId = Guid.NewGuid().ToString(),
+                    FileName = fileName,
+                    FilePath = $"/uploads/cars/{fileName}",
+                    IsPrimary = false,
+                    UploadedAt = DateTime.UtcNow
+                };
+
+                _context.CarPhotos.Add(carPhoto);
+                await _context.SaveChangesAsync();
+
+                return Json(new { photoId = carPhoto.PhotoId });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error uploading photo");
+                return StatusCode(500, "Error uploading photo");
+            }
+        }
+
+        [Authorize(AuthenticationSchemes = "HostAuth")]
+        [HttpDelete]
+        public async Task<IActionResult> DeletePhoto(string id)
+        {
+            try
+            {
+                var photo = await _context.CarPhotos.FindAsync(id);
+                if (photo == null)
+                {
+                    return NotFound();
+                }
+
+                // Delete file from storage
+                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "cars", photo.FileName);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+
+                // Remove from database
+                _context.CarPhotos.Remove(photo);
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting photo");
+                return StatusCode(500, "Error deleting photo");
+            }
         }
     }
 }

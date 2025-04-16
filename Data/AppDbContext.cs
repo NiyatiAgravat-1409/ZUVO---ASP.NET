@@ -16,6 +16,10 @@ namespace ZUVO_MVC_.Data
         public DbSet<HostUser> HostUsers { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Query> Queries { get; set; }
+        public DbSet<Car> Cars { get; set; }
+        public DbSet<CarPhoto> CarPhotos { get; set; }
+        public DbSet<Admin> Admins { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -55,6 +59,19 @@ namespace ZUVO_MVC_.Data
                     .HasForeignKey(e => e.HostId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+
+            // Configure relationships
+            builder.Entity<Car>()
+                .HasOne(c => c.Host)
+                .WithMany()
+                .HasForeignKey(c => c.HostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<CarPhoto>()
+                .HasOne(p => p.Car)
+                .WithMany(c => c.Photos)
+                .HasForeignKey(p => p.CarId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
