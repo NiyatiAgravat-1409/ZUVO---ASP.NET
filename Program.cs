@@ -8,21 +8,45 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Configure EF Core
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Configure Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+})
+.AddCookie("HostAuth", options =>
+{
+    options.Cookie.Name = "HostAuth";
+    options.LoginPath = "/Host/HostSignin";
+    options.AccessDeniedPath = "/Host/HostSignin";
+    options.ExpireTimeSpan = TimeSpan.FromHours(24);
+});
+
+// Configure Identity for Users
 builder.Services.AddIdentity<Users, IdentityRole>(options =>
 {
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 8;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireLowercase = false;
-    options.User.RequireUniqueEmail = true;
     options.SignIn.RequireConfirmedAccount = false;
-    options.SignIn.RequireConfirmedEmail = false;
-    options.SignIn.RequireConfirmedPhoneNumber = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
+    options.User.RequireUniqueEmail = true;
 })
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+.AddEntityFrameworkStores<AppDbContext>()
+.AddDefaultTokenProviders();
+
+// Configure session services
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout as needed
+    options.Cookie.HttpOnly = true; // Enhance security
+    options.Cookie.IsEssential = true; // Make session cookie essential for the app
+});
 
 var app = builder.Build();
 
@@ -37,15 +61,18 @@ if (!Directory.Exists(uploadsPath))
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+// Enable session middleware
+app.UseSession();
+
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 // Initialize database
@@ -55,15 +82,30 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<AppDbContext>();
+        var userManager = services.GetRequiredService<UserManager<Users>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+        // Ensure database is created and migrations are applied
         context.Database.Migrate();
+
+        // Seed roles if they don't exist
+        var roles = new[] { "Host", "Admin", "User" };
+        foreach (var role in roles)
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while migrating the database.");
+        logger.LogError(ex, "An error occurred while seeding the database.");
     }
 }
 
+// Define default route
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

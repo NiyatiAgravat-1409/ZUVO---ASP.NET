@@ -129,7 +129,7 @@ namespace ZUVO_MVC_.Controllers
                     return BadRequest("File too large (max 2MB)");
 
                 // Create uploads folder if it doesn't exist
-                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads/profile-pics");
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "profile-pics");
                 Directory.CreateDirectory(uploadsFolder);
 
                 // Generate unique filename
