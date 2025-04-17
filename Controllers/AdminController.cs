@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ZUVO.Models;
 using ZUVO_MVC_.Data;
 using ZUVO_MVC_.ViewModels;
 
@@ -45,8 +47,13 @@ namespace ZUVO_MVC_.Controllers
                 return RedirectToAction("Index");
 
             ViewBag.Email = email;
-            return View();
+
+
+            var carTypes = _context.CarTypes.ToList();
+
+            return View(carTypes); 
         }
+
 
         public IActionResult Bookings()
         {
@@ -72,5 +79,34 @@ namespace ZUVO_MVC_.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Index");
         }
+
+        public IActionResult Create()
+        {
+            var carTypes = _context.CarTypes.ToList();
+
+            // Pass car types to the view (dropdown)
+            ViewBag.CarTypes = carTypes;
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(CarType car)
+        {
+            // Always set ViewBag.CarTypes in POST as well
+            var carTypes = _context.CarTypes.ToList();
+            ViewBag.CarTypes = carTypes;
+
+            if (ModelState.IsValid)
+            {
+                _context.CarTypes.Add(car);
+                _context.SaveChanges();
+                return RedirectToAction("AdminDashboard", "Admin");
+            }
+
+            return View(car);
+        }
+
+
     }
 }

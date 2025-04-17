@@ -7,6 +7,10 @@ namespace ZUVO_MVC_.ViewModels
 {
     public class CarViewModel
     {
+        public string CarId { get; set; }
+
+        public string HostId { get; set; }
+
         [Required(ErrorMessage = "Make is required")]
         [StringLength(100, ErrorMessage = "Make cannot exceed 100 characters")]
         public string Make { get; set; }
@@ -86,5 +90,7 @@ namespace ZUVO_MVC_.ViewModels
 
         [Required(ErrorMessage = "At least one photo is required")]
         public string Photos { get; set; }
+
+        public bool IsAvailable { get; set; }
     }
 } 

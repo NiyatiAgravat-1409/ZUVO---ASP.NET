@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ZUVO_MVC_.Controllers
 {
@@ -78,8 +79,8 @@ namespace ZUVO_MVC_.Controllers
                 _context.HostUsers.Add(newUser);
                 await _context.SaveChangesAsync();
 
-                // Redirect or show success
-                return RedirectToAction("Host", "HostSignin");
+                // Redirect to signin page
+                return RedirectToAction("HostSignin", "Host");
             }
 
             return View(model);
@@ -117,12 +118,10 @@ namespace ZUVO_MVC_.Controllers
 
                 _logger.LogInformation("Host found in database for email: {Email}", model.Email);
 
-                // Verify password against HostUser table
-                if (hostUser.Password == model.Password)
+                // Verify password directly since HostUser doesn't use Identity
+                if (string.Equals(hostUser.Password, model.Password, StringComparison.OrdinalIgnoreCase))
                 {
-                    _logger.LogInformation("Password verified for email: {Email}", model.Email);
-                    
-                    // Create claims for the host
+                    // Create claims for the host user
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, hostUser.Name),
@@ -131,13 +130,17 @@ namespace ZUVO_MVC_.Controllers
                         new Claim(ClaimTypes.Role, "Host")
                     };
 
-                    // Create identity
-                    var identity = new ClaimsIdentity(claims, "HostAuth");
-                    var principal = new ClaimsPrincipal(identity);
+                    // Create claims identity and principal
+                    var claimsIdentity = new ClaimsIdentity(claims, "HostAuth");
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                    // Sign in the host
-                    await HttpContext.SignInAsync("HostAuth", principal);
-                    
+                    // Sign in the user
+                    await HttpContext.SignInAsync("HostAuth", claimsPrincipal, new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
+                    });
+
                     _logger.LogInformation("Host logged in successfully for email: {Email}", model.Email);
                     return RedirectToAction("HostDashboard", "Host");
                 }
@@ -155,7 +158,6 @@ namespace ZUVO_MVC_.Controllers
 
             return View(model);
         }
-
 
         [HttpGet]
         public IActionResult ForgotPassword()
@@ -280,152 +282,116 @@ namespace ZUVO_MVC_.Controllers
 
         public IActionResult BecomeHost()
         {
-            return View();
+            var carTypes = _context.CarTypes.ToList();
+            return View(carTypes);
         }
 
         [Authorize(AuthenticationSchemes = "HostAuth")]
         [HttpGet]
         public IActionResult Listyourcar()
         {
-            return View();
+            var carTypes = _context.CarTypes.ToList(); // Make sure _context is your DB context and it's properly injected
+            ViewBag.CarTypes = carTypes;
+
+            var viewModel = new CarViewModel();
+            ViewData["HostId"] = new SelectList(_context.HostUsers, "HostId", "HostId");
+            return View(viewModel);
         }
 
         [Authorize(AuthenticationSchemes = "HostAuth")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Listyourcar(CarViewModel model)
+        public async Task<IActionResult> Listyourcar(CarViewModel viewModel)
         {
-            _logger.LogInformation("Starting Listyourcar action");
-            
+            // Log HostId
+            Console.WriteLine("Host ID: " + viewModel.HostId);
+
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Model validation failed. Errors: {Errors}", 
-                    string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
-                return View(model);
+                Console.WriteLine("ModelState is NOT valid. Errors:");
+
+                foreach (var state in ModelState)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        Console.WriteLine($"Field: {state.Key}, Error: {error.ErrorMessage}");
+                    }
+                }
+
+                // Repopulate view data
+                ViewBag.CarTypes = _context.CarTypes.ToList();
+                ViewData["HostId"] = new SelectList(_context.HostUsers, "HostId", "HostId", viewModel.HostId);
+                return View(viewModel);
             }
 
-            try
+            string registrationDocPath = null;
+
+            if (viewModel.CarRegistrationDocument != null)
             {
-                var hostId = User.FindFirst("HostId")?.Value;
-                if (string.IsNullOrEmpty(hostId))
+                try
                 {
-                    _logger.LogWarning("HostId not found in claims");
-                    return RedirectToAction("HostSignin");
-                }
+                    var fileName = Guid.NewGuid() + Path.GetExtension(viewModel.CarRegistrationDocument.FileName);
+                    var path = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", fileName);
 
-                _logger.LogInformation("Creating new car for host: {HostId}", hostId);
+                    Directory.CreateDirectory(Path.GetDirectoryName(path));
 
-                // Create new car
-                var car = new Car
-                {
-                    HostId = hostId,
-                    Make = model.Make,
-                    Model = model.Model,
-                    Year = model.Year,
-                    Color = model.Color,
-                    LicensePlateNo = model.LicensePlateNo,
-                    VIN = model.VIN,
-                    Transmission = model.Transmission,
-                    FuelType = model.FuelType,
-                    Seats = model.Seats,
-                    DailyRate = model.DailyRate,
-                    Description = model.Description,
-                    AllowCancellation = model.AllowCancellation,
-                    MinRentalPeriod = model.MinRentalPeriod,
-                    Mileage = model.Mileage,
-                    AdditionalFeatures = model.AdditionalFeatures,
-                    InsuranceType = model.InsuranceType,
-                    InsuranceNumber = model.InsuranceNumber,
-                    InsuranceCompany = model.InsuranceCompany,
-                    IsAvailable = true,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                _logger.LogInformation("Adding car to context: {@Car}", car);
-                _context.Cars.Add(car);
-
-                // Save car first to get the CarId
-                _logger.LogInformation("Saving car to database");
-                await _context.SaveChangesAsync();
-                _logger.LogInformation("Car saved successfully with ID: {CarId}", car.CarId);
-
-                // Handle document uploads
-                if (model.CarRegistrationDocument != null && model.CarRegistrationDocument.Length > 0)
-                {
-                    _logger.LogInformation("Processing car registration document");
-                    var docFileName = $"{Guid.NewGuid()}{Path.GetExtension(model.CarRegistrationDocument.FileName)}";
-                    var docFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "documents", docFileName);
-                    
-                    Directory.CreateDirectory(Path.GetDirectoryName(docFilePath));
-                    
-                    using (var stream = new FileStream(docFilePath, FileMode.Create))
+                    using (var stream = new FileStream(path, FileMode.Create))
                     {
-                        await model.CarRegistrationDocument.CopyToAsync(stream);
+                        await viewModel.CarRegistrationDocument.CopyToAsync(stream);
                     }
-                    
-                    car.CarRegistrationDocumentPath = $"/uploads/documents/{docFileName}";
-                    _logger.LogInformation("Car registration document saved: {Path}", car.CarRegistrationDocumentPath);
-                }
 
-                if (model.InsuranceCertificate != null && model.InsuranceCertificate.Length > 0)
+                    registrationDocPath = Path.Combine("uploads", fileName);
+                    Console.WriteLine("File uploaded to: " + registrationDocPath);
+                }
+                catch (Exception ex)
                 {
-                    _logger.LogInformation("Processing insurance certificate");
-                    var certFileName = $"{Guid.NewGuid()}{Path.GetExtension(model.InsuranceCertificate.FileName)}";
-                    var certFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "documents", certFileName);
-                    
-                    Directory.CreateDirectory(Path.GetDirectoryName(certFilePath));
-                    
-                    using (var stream = new FileStream(certFilePath, FileMode.Create))
-                    {
-                        await model.InsuranceCertificate.CopyToAsync(stream);
-                    }
-                    
-                    car.InsuranceCertificatePath = $"/uploads/documents/{certFileName}";
-                    _logger.LogInformation("Insurance certificate saved: {Path}", car.InsuranceCertificatePath);
+                    Console.WriteLine("File upload failed: " + ex.Message);
                 }
-
-                // Link uploaded photos to the car
-                if (!string.IsNullOrEmpty(model.Photos))
-                {
-                    _logger.LogInformation("Processing photos: {Photos}", model.Photos);
-                    try
-                    {
-                        var photoIds = System.Text.Json.JsonSerializer.Deserialize<List<string>>(model.Photos);
-                        if (photoIds != null && photoIds.Count > 0)
-                        {
-                            _logger.LogInformation("Found {Count} photos to link", photoIds.Count);
-                            var photos = await _context.CarPhotos
-                                .Where(p => photoIds.Contains(p.PhotoId))
-                                .ToListAsync();
-
-                            foreach (var photo in photos)
-                            {
-                                photo.CarId = car.CarId;
-                                photo.IsPrimary = photos.IndexOf(photo) == 0;
-                                _logger.LogInformation("Linked photo {PhotoId} to car {CarId}", photo.PhotoId, car.CarId);
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Error processing photos: {Photos}", model.Photos);
-                    }
-                }
-
-                _logger.LogInformation("Saving final changes to database");
-                await _context.SaveChangesAsync();
-                _logger.LogInformation("All changes saved successfully");
-
-                return RedirectToAction("HostDashboard");
             }
-            catch (Exception ex)
+            else
             {
-                _logger.LogError(ex, "Error listing car. Model: {@Model}", model);
-                ModelState.AddModelError("", "An error occurred while listing your car. Please try again.");
-                return View(model);
+                Console.WriteLine("No file uploaded.");
             }
+
+            // Log before saving
+            Console.WriteLine("Creating car object...");
+
+            var car = new Car
+            {
+                CarId = Guid.NewGuid().ToString(),
+                HostId = viewModel.HostId,
+                Make = viewModel.Make,
+                Model = viewModel.Model,
+                Year = viewModel.Year,
+                Color = viewModel.Color,
+                LicensePlateNo = viewModel.LicensePlateNo,
+                VIN = viewModel.VIN,
+                Transmission = viewModel.Transmission,
+                FuelType = viewModel.FuelType,
+                Seats = viewModel.Seats,
+                DailyRate = viewModel.DailyRate,
+                Description = viewModel.Description,
+                AllowCancellation = viewModel.AllowCancellation,
+                MinRentalPeriod = viewModel.MinRentalPeriod,
+                Mileage = viewModel.Mileage,
+                AdditionalFeatures = viewModel.AdditionalFeatures,
+                InsuranceType = viewModel.InsuranceType,
+                InsuranceNumber = viewModel.InsuranceNumber,
+                InsuranceCompany = viewModel.InsuranceCompany,
+                CarRegistrationDocumentPath = registrationDocPath,
+                InsuranceCertificatePath = null,
+                IsAvailable = viewModel.IsAvailable,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            _context.Cars.Add(car);
+            await _context.SaveChangesAsync();
+
+            Console.WriteLine("Car saved successfully with ID: " + car.CarId);
+
+            return RedirectToAction("HostDashboard");
         }
-
         public IActionResult HostProfile()
         {
             return View();
@@ -438,80 +404,75 @@ namespace ZUVO_MVC_.Controllers
 
         [Authorize(AuthenticationSchemes = "HostAuth")]
         [HttpPost]
-        public async Task<IActionResult> UploadPhoto(IFormFile photo)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadPhoto(IFormFile file)
         {
-            try
+            if (file == null || file.Length == 0)
+                return Json(new { success = false, message = "File is empty" });
+
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                if (photo == null || photo.Length == 0)
+                await file.CopyToAsync(stream);
+            }
+
+            return Json(new { success = true, fileName });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadCarPhotos(string carId, List<IFormFile> carPhotos)
+        {
+            if (carPhotos == null || carPhotos.Count == 0)
+            {
+                ModelState.AddModelError("carPhotos", "Please select at least one photo.");
+                return View(); // Return to your page if no photos were uploaded.
+            }
+
+            var car = await _context.Cars.FindAsync(carId);
+            if (car == null)
+            {
+                return NotFound();
+            }
+
+            foreach (var photo in carPhotos)
+            {
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(photo.FileName);
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+                Directory.CreateDirectory(uploadsFolder);
+
+                var filePath = Path.Combine(uploadsFolder, fileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    return BadRequest("No photo uploaded");
+                    await photo.CopyToAsync(fileStream);
                 }
 
-                // Generate unique filename
-                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(photo.FileName)}";
-                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "cars", fileName);
-
-                // Ensure directory exists
-                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-
-                // Save file
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await photo.CopyToAsync(stream);
-                }
-
-                // Create temporary photo record
                 var carPhoto = new CarPhoto
                 {
-                    PhotoId = Guid.NewGuid().ToString(),
+                    CarId = carId,
                     FileName = fileName,
-                    FilePath = $"/uploads/cars/{fileName}",
-                    IsPrimary = false,
+                    FilePath = Path.Combine("uploads", fileName),
+                    IsPrimary = false, // Set primary to false by default
                     UploadedAt = DateTime.UtcNow
                 };
 
+                // Add photo to database
                 _context.CarPhotos.Add(carPhoto);
-                await _context.SaveChangesAsync();
+            }       
 
-                return Json(new { photoId = carPhoto.PhotoId });
-            }
-            catch (Exception ex)
+            // If there is no photo already marked as primary, mark the first uploaded photo as primary
+            var primaryPhoto = await _context.CarPhotos.FirstOrDefaultAsync(p => p.CarId == carId && p.IsPrimary);
+            if (primaryPhoto == null && carPhotos.Count > 0)
             {
-                _logger.LogError(ex, "Error uploading photo");
-                return StatusCode(500, "Error uploading photo");
+                var firstUploadedPhoto = await _context.CarPhotos.FirstAsync(p => p.CarId == carId);
+                firstUploadedPhoto.IsPrimary = true;
+                _context.CarPhotos.Update(firstUploadedPhoto);
             }
-        }
 
-        [Authorize(AuthenticationSchemes = "HostAuth")]
-        [HttpDelete]
-        public async Task<IActionResult> DeletePhoto(string id)
-        {
-            try
-            {
-                var photo = await _context.CarPhotos.FindAsync(id);
-                if (photo == null)
-                {
-                    return NotFound();
-                }
-
-                // Delete file from storage
-                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "cars", photo.FileName);
-                if (System.IO.File.Exists(filePath))
-                {
-                    System.IO.File.Delete(filePath);
-                }
-
-                // Remove from database
-                _context.CarPhotos.Remove(photo);
-                await _context.SaveChangesAsync();
-
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error deleting photo");
-                return StatusCode(500, "Error deleting photo");
-            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction("CarDetails", new { id = carId });
         }
     }
 }

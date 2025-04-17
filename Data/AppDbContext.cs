@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ZUVO.Models;
 using ZUVO_MVC_.Models;
 
 namespace ZUVO_MVC_.Data
@@ -19,7 +20,7 @@ namespace ZUVO_MVC_.Data
         public DbSet<Car> Cars { get; set; }
         public DbSet<CarPhoto> CarPhotos { get; set; }
         public DbSet<Admin> Admins { get; set; }
-
+        public DbSet<CarType> CarTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

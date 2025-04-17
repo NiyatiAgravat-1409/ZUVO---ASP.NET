@@ -1,547 +1,510 @@
-﻿@model ZUVO_MVC_.ViewModels.CarViewModel
-
-@{
-    Layout = null;
-}
-
-@{
-    ViewData["Title"] = "List Your Car";
-}
-
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f8f5ed;
-        margin: 0;
-        padding: 0;
-    }
-
-
-    .navbar {
-        background-color: #D6CFB4;
-        padding: 10px;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-        .navbar img {
-            height: 70px;
+﻿        @model ZUVO_MVC_.ViewModels.CarViewModel
+        @{
+            Layout = null;
         }
 
-    .section {
-        background: white;
-        padding: 15px;
-        margin: 20px 0;
-        border-radius: 10px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    }
-
-        .section h2 {
-            font-size: 18px;
-            border-bottom: 2px solid #D6CFB4;
-            padding-bottom: 5px;
+        @{
+            ViewData["Title"] = "List Your Car";
         }
 
-    input, select {
-        width: 100%;
-        padding: 8px;
-        margin: 5px 0;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-    }
+        <style>
+                body {
+                font-family: Arial, sans-serif;
+                background-color: #f8f5ed;
+                margin: 0;
+                padding: 0;
+            }
 
-    .file-upload {
-        margin: 10px 0;
-    }
 
-        .file-upload button {
-            background-color: #3D3229;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+            .navbar {
+                background-color: #D6CFB4;
+                padding: 10px;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
 
-    .file-info {
-        font-size: 12px;
-        color: green;
-    }
+                .navbar img {
+                    height: 70px;
+                }
 
-    .radio-group {
-        display: flex;
-        gap: 15px;
-        align-items: center;
-    }
+            .section {
+                background: white;
+                padding: 15px;
+                margin: 20px 0;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            }
 
-        .radio-group input {
-            width: auto;
-        }
+                .section h2 {
+                    font-size: 18px;
+                    border-bottom: 2px solid #D6CFB4;
+                    padding-bottom: 5px;
+                }
+
+            input, select {
+                width: 100%;
+                padding: 8px;
+                margin: 5px 0;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
+
+            .file-upload {
+                margin: 10px 0;
+            }
+
+                .file-upload button {
+                    background-color: #3D3229;
+                    color: white;
+                    padding: 10px;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+
+            .file-info {
+                font-size: 12px;
+                color: green;
+            }
+
+            .radio-group {
+                display: flex;
+                gap: 15px;
+                align-items: center;
+            }
+
+                .radio-group input {
+                    width: auto;
+                }
 
 
     
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f8f8f8;
-        margin: 0;
-        padding: 0;
-    }
-
-    .container {
-        width: 60%;
-        margin: 20px auto;
-        background: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .section-title {
-        font-size: 18px;
-        font-weight: bold;
-        color: #3D3229;
-        margin-top: 20px;
-        padding-bottom: 5px;
-        border-bottom: 1px solid #ccc;
-    }
-
-    .form-group {
-        margin: 10px 0;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-        .form-group label {
-            font-size: 16px;
-            color: #333;
-            flex: 1;
-        }
-
-        .form-group input {
-            flex: 2;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background: #f4f0e4;
-            font-size: 14px;
-        }
-
-            .form-group input:focus {
-                outline: none;
-                border-color: #a1905b;
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f8f8f8;
+                margin: 0;
+                padding: 0;
             }
 
-    .file-upload {
-        flex: 2;    
-    }
+            .container {
+                width: 60%;
+                margin: 20px auto;
+                background: #fff;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .section-title {
+                font-size: 18px;
+                font-weight: bold;
+                color: #3D3229;
+                margin-top: 20px;
+                padding-bottom: 5px;
+                border-bottom: 1px solid #ccc;
+            }
+
+            .form-group {
+                margin: 10px 0;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+                .form-group label {
+                    font-size: 16px;
+                    color: #333;
+                    flex: 1;
+                }
+
+                .form-group input {
+                    flex: 2;
+                    padding: 8px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    background: #f4f0e4;
+                    font-size: 14px;
+                }
+
+                    .form-group input:focus {
+                        outline: none;
+                        border-color: #a1905b;
+                    }
+
+            .file-upload {
+                flex: 2;    
+            }
 
         
 
-    .file-hint {
-        font-size: 12px;
-        color: green;
-        margin-top: 5px;
-    }
+            .file-hint {
+                font-size: 12px;
+                color: green;
+                margin-top: 5px;
+            }
 
-    .submit-btn {
-        width: 100%;
-        background: #3D3229;
-        color: white;
-        border: none;
-        padding: 10px;
-        font-size: 16px;
-        font-weight: bold;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
+            .submit-btn {
+                width: 100%;
+                background: #3D3229;
+                color: white;
+                border: none;
+                padding: 10px;
+                font-size: 16px;
+                font-weight: bold;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-top: 20px;
+            }
 
-        .submit-btn:hover {
-            background: #3D3229;
+                .submit-btn:hover {
+                    background: #3D3229;
+                }
+
+            .photo-upload-container {
+                margin-top: 20px;
+            }
+
+            .photo-preview {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            .photo-preview-item {
+                position: relative;
+                width: 150px;
+                height: 150px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                overflow: hidden;
+            }
+
+            .photo-preview-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .photo-preview-item .remove-photo {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                background: rgba(255, 0, 0, 0.7);
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 25px;
+                height: 25px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .custom-file-upload {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #3D3229;
+                color: white;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-bottom: 10px;
+            }
+
+            .custom-file-upload:hover {
+                background-color: #2a221b;
+            }
+
+            #photoInput {
+                display: none;
+            }
+
+            .upload-progress {
+                margin-top: 10px;
+                display: none;
+            }
+
+            .upload-status {
+                margin-top: 5px;
+                font-size: 14px;
+                color: green;
+            }
+            .photo-preview-item {
+            position: relative;
+            display: inline-block;
+            margin: 10px;
         }
 
-    .photo-upload-container {
-        margin-top: 20px;
-    }
+        .photo-preview-img {
+            max-width: 100px;
+            max-height: 100px;
+            display: block;
+        }
 
-    .photo-preview {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 10px;
-    }
+        .remove-photo {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
 
-    .photo-preview-item {
-        position: relative;
-        width: 150px;
-        height: 150px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        overflow: hidden;
-    }
+        .remove-photo:hover {
+            background-color: red;
+        }
+        </style>
 
-    .photo-preview-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .photo-preview-item .remove-photo {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        background: rgba(255, 0, 0, 0.7);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 25px;
-        height: 25px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .custom-file-upload {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #3D3229;
-        color: white;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-bottom: 10px;
-    }
-
-    .custom-file-upload:hover {
-        background-color: #2a221b;
-    }
-
-    #photoInput {
-        display: none;
-    }
-
-    .upload-progress {
-        margin-top: 10px;
-        display: none;
-    }
-
-    .upload-status {
-        margin-top: 5px;
-        font-size: 14px;
-        color: green;
-    }
-</style>
-
-<div class="navbar">
-    <img src="/images/Designer__2_-removebg-preview 1.png" alt="Logo">
-    <h2>ADD YOUR CAR DETAILS</h2>
-    <a asp-controller="Host" asp-action="EditCarDetails">
-        <img src="~/images/Account circle.png" alt="Profile" class="profile-icon">
-    </a>
-</div>
-
-<div class="container mt-4">
-    <form asp-controller="Host" asp-action="Listyourcar" method="post" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-        <div class="section">
-            <h2>CAR INFORMATION</h2>
-            <div class="form-group">
-                <label asp-for="Make" class="control-label"></label>
-                <input asp-for="Make" class="form-control" />
-                <span asp-validation-for="Make"  class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Model" class="control-label"></label>
-                <input asp-for="Model" class="form-control" />
-                <span asp-validation-for="Model" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Year" class="control-label"></label>
-                <input asp-for="Year" class="form-control" />
-                <span asp-validation-for="Year" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Color" class="control-label"></label>
-                <input asp-for="Color" class="form-control" />
-                <span asp-validation-for="Color" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="LicensePlateNo" class="control-label"></label>
-                <input asp-for="LicensePlateNo" class="form-control" />
-                <span asp-validation-for="LicensePlateNo" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="VIN" class="control-label"></label>
-                <input asp-for="VIN" class="form-control" />
-                <span asp-validation-for="VIN" class="text-danger"></span>
-            </div>
+        <div class="navbar">
+            <img src="/images/Designer__2_-removebg-preview 1.png" alt="Logo">
+            <h2>ADD YOUR CAR DETAILS</h2>
+            <a asp-controller="Host" asp-action="EditCarDetails">
+                <img src="~/images/Account circle.png" alt="Profile" class="profile-icon">
+            </a>
         </div>
 
-        <div class="section">
-            <h2>CAR FEATURES</h2>
-            <div class="form-group">
-                <label asp-for="Transmission" class="control-label"></label>
-                <input asp-for="Transmission" class="form-control" />
-                <span asp-validation-for="Transmission" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="FuelType" class="control-label"></label>
-                <input asp-for="FuelType" class="form-control" />
-                <span asp-validation-for="FuelType" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Seats" class="control-label"></label>
-                <input asp-for="Seats" class="form-control" />
-                <span asp-validation-for="Seats" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Mileage" class="control-label"></label>
-                <input asp-for="Mileage" class="form-control" />
-                <span asp-validation-for="Mileage" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="AdditionalFeatures" class="control-label"></label>
-                <input asp-for="AdditionalFeatures" class="form-control" />
-                <span asp-validation-for="AdditionalFeatures" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>RENTAL DETAILS</h2>
-            <div class="form-group">
-                <label asp-for="DailyRate" class="control-label"></label>
-                <input asp-for="DailyRate" class="form-control" />
-                <span asp-validation-for="DailyRate" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="AllowCancellation" class="control-label"></label>
-                <div class="radio-group">
-                    <input type="radio" asp-for="AllowCancellation" value="true" /> Yes
-                    <input type="radio" asp-for="AllowCancellation" value="false" /> No
-                </div>
-                <span asp-validation-for="AllowCancellation" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="MinRentalPeriod" class="control-label"></label>
-                <input asp-for="MinRentalPeriod" class="form-control" />
-                <span asp-validation-for="MinRentalPeriod" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>SAFETY AND INSURANCE</h2>
-            <div class="form-group">
-                <label asp-for="InsuranceType" class="control-label"></label>
-                <input asp-for="InsuranceType" class="form-control" />
-                <span asp-validation-for="InsuranceType" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="InsuranceNumber" class="control-label"></label>
-                <input asp-for="InsuranceNumber" class="form-control" />
-                <span asp-validation-for="InsuranceNumber" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="InsuranceCompany" class="control-label"></label>
-                <input asp-for="InsuranceCompany" class="form-control" />
-                <span asp-validation-for="InsuranceCompany" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>DOCUMENTS</h2>
-            <div class="form-group">
-                <label asp-for="CarRegistrationDocument" class="control-label"></label>
-                <div class="file-upload">
-                    <input asp-for="CarRegistrationDocument" type="file" class="form-control" accept=".pdf,.jpg,.png" />
-                    <p class="file-hint">File should be less than 20MB and .pdf, .jpg, or .png only</p>
-                </div>
-                <span asp-validation-for="CarRegistrationDocument" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="InsuranceCertificate" class="control-label"></label>
-                <div class="file-upload">
-                    <input asp-for="InsuranceCertificate" type="file" class="form-control" accept=".pdf,.jpg,.png" />
-                    <p class="file-hint">File should be less than 20MB and .pdf, .jpg, or .png only</p>
-                </div>
-                <span asp-validation-for="InsuranceCertificate" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>PHOTOS</h2>
-            <div class="form-group">
-                <label class="control-label">Car Photos</label>
-                <div class="photo-upload-container">
-                    <label for="photoInput" class="custom-file-upload">
-                        <i class="fas fa-camera"></i> Add Photo
-                    </label>
-                    <input id="photoInput" type="file" accept="image/*" />
-                    <div class="upload-progress">
-                        <progress value="0" max="100"></progress>
-                        <div class="upload-status"></div>
+        <div class="container mt-4">
+            <form asp-controller="Host" asp-action="Listyourcar" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="HostId" />
+                <div class="section">
+                    <h2>CAR INFORMATION</h2>
+                    <div class="form-group">
+                        <label asp-for="Make" class="control-label"></label>
+                        <input asp-for="Make" class="form-control" />
+                        <span asp-validation-for="Make" class="text-danger"></span>
                     </div>
-                    <div class="photo-preview" id="photoPreview"></div>
-                    <input type="hidden" asp-for="Photos" id="uploadedPhotos" />
-                    <span asp-validation-for="Photos" class="text-danger"></span>
-                    <p class="file-hint">Upload photos one by one. The first photo will be used as the primary image.</p>
+
+                    <div class="form-group">
+                        <label asp-for="Model" class="control-label"></label>
+                        <select asp-for="Model" class="form-control">
+                            <option value="">-- Select Car Model --</option>
+                            @if (ViewBag.CarTypes != null)
+                            {
+                                foreach (var car in ViewBag.CarTypes as List<ZUVO.Models.CarType>)
+                                {
+                                    <option value="@car.CarName">@car.CarName</option>
+                                }
+                            }
+                            else
+                            {
+                                <option disabled>No car models available</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Model" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Year" class="control-label"></label>
+                        <input asp-for="Year" type="number" min="1900" max="2099" class="form-control" />
+                        <span asp-validation-for="Year" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Color" class="control-label"></label>
+                        <input asp-for="Color" class="form-control" />
+                        <span asp-validation-for="Color" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="LicensePlateNo" class="control-label"></label>
+                        <input asp-for="LicensePlateNo" class="form-control" />
+                        <span asp-validation-for="LicensePlateNo" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="VIN" class="control-label"></label>
+                        <input asp-for="VIN" class="form-control" />
+                        <span asp-validation-for="VIN" class="text-danger"></span>
+                    </div>
                 </div>
-            </div>
+
+                <div class="section">
+                    <h2>CAR FEATURES</h2>
+                    <div class="form-group">
+                        <label asp-for="Transmission" class="control-label"></label>
+                        <input asp-for="Transmission" class="form-control" />
+                        <span asp-validation-for="Transmission" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="FuelType" class="control-label"></label>
+                        <input asp-for="FuelType" class="form-control" />
+                        <span asp-validation-for="FuelType" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Seats" class="control-label"></label>
+                        <input asp-for="Seats" type="number" min="1" class="form-control" />
+                        <span asp-validation-for="Seats" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Mileage" class="control-label"></label>
+                        <input asp-for="Mileage" class="form-control" />
+                        <span asp-validation-for="Mileage" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="AdditionalFeatures" class="control-label"></label>
+                        <input asp-for="AdditionalFeatures" class="form-control" />
+                        <span asp-validation-for="AdditionalFeatures" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>RENTAL DETAILS</h2>
+                    <div class="form-group">
+                        <label asp-for="DailyRate" class="control-label"></label>
+                        <input asp-for="DailyRate" class="form-control" />
+                        <span asp-validation-for="DailyRate" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="AllowCancellation" class="control-label"></label>
+                        <div class="radio-group">
+                            <input type="radio" asp-for="AllowCancellation" value="true" /> Yes
+                            <input type="radio" asp-for="AllowCancellation" value="false" /> No
+                        </div>
+                        <span asp-validation-for="AllowCancellation" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="MinRentalPeriod" class="control-label"></label>
+                        <input asp-for="MinRentalPeriod" class="form-control" />
+                        <span asp-validation-for="MinRentalPeriod" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>SAFETY AND INSURANCE</h2>
+                    <div class="form-group">
+                        <label asp-for="InsuranceType" class="control-label"></label>
+                        <input asp-for="InsuranceType" class="form-control" />
+                        <span asp-validation-for="InsuranceType" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="InsuranceNumber" class="control-label"></label>
+                        <input asp-for="InsuranceNumber" class="form-control" />
+                        <span asp-validation-for="InsuranceNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="InsuranceCompany" class="control-label"></label>
+                        <input asp-for="InsuranceCompany" class="form-control" />
+                        <span asp-validation-for="InsuranceCompany" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>DOCUMENTS</h2>
+                    <div class="form-group">
+                        <label asp-for="CarRegistrationDocument" class=" control-label"></label>
+                        <div class="file-upload">
+                            <input asp-for="CarRegistrationDocument" type="file" class="form-control" accept=".pdf,.jpg,.png" />
+                            <p class="file-hint">File should be less than 20MB and .pdf, .jpg, or .png only</p>
+                        </div>
+                        <span asp-validation-for="CarRegistrationDocument" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="InsuranceCertificate" class="control-label"></label>
+                        <div class="file-upload">
+                            <input asp-for="InsuranceCertificate" type="file" class="form-control" accept=".pdf,.jpg,.png" />
+                            <p class="file-hint">File should be less than 20MB and .pdf, .jpg, or .png only</p>
+                        </div>
+                        <span asp-validation-for="InsuranceCertificate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>PHOTOS</h2>
+                    <div class="form-group">
+                        <label class="control-label">Car Photos</label>
+                        <div class="photo-upload-container">
+                            <label for="photoInput" class="custom-file-upload">
+                                <i class="fas fa-camera"></i> Add Photos
+                            </label>
+                            <input id="photoInput" type="file" name="carPhotos" accept="image/*" multiple />
+                            <div class="upload-progress">
+                                <progress value="0" max="100"></progress>
+                                <div class="upload-status"></div>
+                            </div>
+                            <div class="photo-preview" id="photoPreview"></div>
+                            <input type="hidden" asp-for="Photos" id="uploadedPhotos" />
+                            <span asp-validation-for="Photos" class="text-danger"></span>
+                            <p class="file-hint">Upload photos one by one. The first photo will be used as the primary image.</p>
+                            <button type="button" id="uploadButton" class="btn btn-primary">Upload</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="submit-btn">SUBMIT</button>
+                </div>
+            </form>
         </div>
 
-        <div class="form-group mt-4">
-            <button type="submit" class="submit-btn">SUBMIT</button>
-        </div>
-    </form>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        let uploadedPhotoIds = [];
-
-                document.addEventListener('DOMContentLoaded', function() {
+        <script>
             let uploadedPhotoIds = [];
-            const photoInput = document.getElementById('photoInput');
-            const uploadedPhotosInput = document.getElementById('uploadedPhotos');
-            const photoPreview = document.getElementById('photoPreview');
 
-            // Ensure elements exist
-            if (!photoInput || !uploadedPhotosInput || !photoPreview) {
-                console.error('Required elements not found');
-                return;
-            }
+            document.addEventListener('DOMContentLoaded', function () {
+                const photoInput = document.getElementById('photoInput');
+                const photoPreview = document.getElementById('photoPreview');
+                const uploadedPhotosInput = document.getElementById('uploadedPhotos');
 
-            // Get anti-forgery token
-            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
-            if (!token) {
-                console.error('Anti-forgery token not found');
-            }
-
-            photoInput.addEventListener('change', async function(e) {
-                if (this.files && this.files[0]) {
-                    const file = this.files[0];
-
-                    // Validate file type and size
-                    if (!file.type.match('image.*')) {
-                        alert('Please select an image file');
-                        return;
-                    }
-                    if (file.size > 5 * 1024 * 1024) { // 5MB limit
-                        alert('Image must be less than 5MB');
+                document.getElementById('uploadButton').addEventListener('click', () => {
+                    const files = photoInput.files;
+                    if (!files || files.length === 0) {
+                        alert("Please select photo(s) first.");
                         return;
                     }
 
-                    const formData = new FormData();
-                    formData.append('photo', file);
-
-                    // Show progress
-                    const progressDiv = document.querySelector('.upload-progress');
-                    const progressBar = progressDiv.querySelector('progress');
-                    const statusDiv = document.querySelector('.upload-status');
-                    progressDiv.style.display = 'block';
-                    progressBar.value = 0;
-                    statusDiv.textContent = 'Uploading...';
-
-                    try {
-                        const response = await fetch('/Host/UploadPhoto', {
-                            method: 'POST',
-                            body: formData,
-                            headers: token ? {
-                                'RequestVerificationToken': token
-                            } : {}
-                        });
-
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-
-                        const result = await response.json();
-                        if (!result.photoId) {
-                            throw new Error('No photoId in response');
-                        }
-
-                        uploadedPhotoIds.push(result.photoId);
-                        uploadedPhotosInput.value = JSON.stringify(uploadedPhotoIds);
-
-                        // Add to preview
+                    for (let file of files) {
                         const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const div = document.createElement('div');
-                            div.className = 'photo-preview-item';
-                            div.dataset.photoId = result.photoId;
+
+                        reader.onload = function (e) {
+                            const photoDiv = document.createElement('div');
+                            photoDiv.className = 'photo-preview-item';
 
                             const img = document.createElement('img');
                             img.src = e.target.result;
+                            img.className = 'photo-preview-img';
 
                             const removeBtn = document.createElement('button');
                             removeBtn.className = 'remove-photo';
-                            removeBtn.innerHTML = '×';
-                            removeBtn.onclick = async function() {
-                                try {
-                                    const deleteResponse = await fetch(`/Host/DeletePhoto/${result.photoId}`, {
-                                        method: 'DELETE',
-                                        headers: token ? {
-                                            'RequestVerificationToken': token
-                                        } : {}
-                                    });
+                            removeBtn.innerText = '×';
 
-                                    if (deleteResponse.ok) {
-                                        div.remove();
-                                        uploadedPhotoIds = uploadedPhotoIds.filter(id => id !== result.photoId);
-                                        uploadedPhotosInput.value = JSON.stringify(uploadedPhotoIds);
-                                    } else {
-                                        throw new Error('Delete failed');
-                                    }
-                                } catch (error) {
-                                    console.error('Error deleting photo:', error);
-                                    alert('Failed to delete photo. Please try again.');
-                                }
+                            removeBtn.onclick = function () {
+                                photoPreview.removeChild(photoDiv);
+                                // Optional: Remove from uploadedPhotoIds array if you’re saving them in DB
                             };
 
-                            div.appendChild(img);
-                            div.appendChild(removeBtn);
-                            photoPreview.appendChild(div);
+                            photoDiv.appendChild(img);
+                            photoDiv.appendChild(removeBtn);
+                            photoPreview.appendChild(photoDiv);
                         };
+
                         reader.readAsDataURL(file);
-
-                        statusDiv.textContent = 'Upload successful!';
-                        progressBar.value = 100;
-                    } catch (error) {
-                        console.error('Error uploading photo:', error);
-                        statusDiv.textContent = 'Upload failed: ' + (error.message || 'Please try again');
-                        statusDiv.style.color = 'red';
-                    } finally {
-                        this.value = '';
-                        setTimeout(() => {
-                            progressDiv.style.display = 'none';
-                        }, 3000);
                     }
-                }
-            });
 
-            // Ensure photos are included when form submits
-            document.querySelector('form')?.addEventListener('submit', function() {
-                uploadedPhotosInput.value = JSON.stringify(uploadedPhotoIds);
+                    // Save dummy names or IDs (if needed from backend response)
+                    uploadedPhotosInput.value = uploadedPhotoIds.join(',');
+                });
             });
-        });
-    </script>
-}
-</html>
+            @if (TempData["Success"] != null)
+            {
+                <text>
+                    alert('Car listed successfully!');
+                </text>
+            }
+        </script>
+

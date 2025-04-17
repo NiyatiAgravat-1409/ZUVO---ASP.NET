@@ -15,15 +15,19 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Configure Authentication
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = IdentityConstants.ApplicationScheme;
-    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+    options.DefaultScheme = "HostAuth";
+    options.DefaultSignInScheme = "HostAuth";
+    options.DefaultAuthenticateScheme = "HostAuth";
 })
 .AddCookie("HostAuth", options =>
 {
-    options.Cookie.Name = "HostAuth";
     options.LoginPath = "/Host/HostSignin";
-    options.AccessDeniedPath = "/Host/HostSignin";
-    options.ExpireTimeSpan = TimeSpan.FromHours(24);
+    options.AccessDeniedPath = "/Host/AccessDenied";
+    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    options.SlidingExpiration = true;
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Strict;
 });
 
 // Configure Identity for Users
@@ -99,7 +103,7 @@ using (var scope = app.Services.CreateScope())
         }
     }
     catch (Exception ex)
-    {
+    {       
         var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "An error occurred while seeding the database.");
     }

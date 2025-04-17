@@ -10,6 +10,7 @@ namespace ZUVO_MVC_.Models
         [Key]
         public string HostId { get; set; }
 
+
         // Personal Information
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]

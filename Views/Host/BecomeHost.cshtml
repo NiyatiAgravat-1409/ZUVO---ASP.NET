@@ -2,195 +2,221 @@
     Layout = null;
 }
 
-
+@model List<ZUVO.Models.CarType>
 
 @{
     ViewData["Title"] = "Become a Host";
 }
 
-<style>
-.hero-section {
-    position: relative;
-    text-align: center;
-    color: black;
-    padding: 30px;
-}
-
-.hero-content {
-    position: relative;
-}
-
-.hero-image {
-    width: 100%;
-    border-radius: 10px;
-    opacity: 0.9;
-}
-
-.hero-text {
-    position: absolute;
-    top: 30%;
-    left: 10%;
-    width: 40%;
-    text-align: left;
-}
-
-.hero-text h1 {
-    font-size: 30px;
-    font-weight: bold;
-}
-
-.hero-text p {
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
-.btn-primary {
-    background-color: #D9C9A3;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-    
-/*earning section*/
-
-.earnings-section {
-    background: #D9C9A3;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: left;
-    width: 80%;
-    margin: auto;
-}
-
-.earnings-form {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 10px;
-}
-
-.earnings-form input[type="text"] {
-    padding: 10px;
-    width: 150px;
-    border: 1px solid #888;
-    border-radius: 5px;
-}
-
-.earnings-form input[type="range"] {
-    width: 50%;
-    cursor: pointer;
-}
-
-.earnings-output {
-    font-size: 18px;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-.earnings-value {
-    color: green;
-    font-weight: bold;
-}
-/*What our host says*/
-    .testimonials-section {
-        text-align: center;
-        padding: 40px 20px;
-        background-color: white; /* Light gray background */
-    }
-
-        .testimonials-section h2 {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <style>
+        .hero-section {
+            position: relative;
+            text-align: center;
+            color: black;
+            padding: 30px;
         }
 
-    .testimonials-container {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-    }
-
-    .testimonial-card {
-        background: #D9C9A3; /* Beige background */
-        padding: 15px;
-        width: 30%;
-        border-radius: 10px;
-        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
-        text-align: left;
-    }
-
-        .testimonial-card p {
-            font-size: 16px;
-            margin-bottom: 5px;
+        .hero-content {
+            position: relative;
         }
 
-    .testimonial-author {
-        font-style: italic;
-        font-weight: bold;
-    }
-
-    /*FOOTER*/
-    .social-container {
-        width: 100%;
-        margin: 0;
-        text-align: center;
-        padding: 40px 0;
-        background-color: #D3C6A4; /* Background color */
-    }
-
-    .social-header {
-        background-color: #3D3229;
-        color: white;
-        font-weight: bold;
-        padding: 10px;
-        font-size: 18px;
-        border-radius: 8px 8px 0 0;
-        text-align: left;
-        padding-left: 15px;
-    }
-
-    .social-icons {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        padding: 20px 0;
-    }
-
-        .social-icons a img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            transition: 0.3s ease;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-            background-color: #3D3229;
+        .hero-image {
+            width: 100%;
+            border-radius: 10px;
+            opacity: 0.9;
         }
 
-            .social-icons a img:hover {
-                transform: scale(1.1);
+        .hero-text {
+            position: absolute;
+            top: 30%;
+            left: 10%;
+            width: 40%;
+            text-align: left;
+        }
+
+            .hero-text h1 {
+                font-size: 30px;
+                font-weight: bold;
             }
 
-    .support-text {
-        font-size: 16px;
-        font-weight: bold;
-        margin-top: 10px;
-    }
+            .hero-text p {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
 
-        .support-text a {
-            text-decoration: underline;
-            color: black;
+        .btn-primary {
+            background-color: #D9C9A3;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
         }
 
+        /*earning section*/
+        .earnings-section {
+            background: #D9C9A3;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            width: 80%;
+            margin: auto;
+        }
 
-</style>
+        .earnings-form {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
 
+            .earnings-form input[type="text"] {
+                padding: 10px;
+                width: 150px;
+                border: 1px solid #888;
+                border-radius: 5px;
+            }
 
-<html>
+            .earnings-form input[type="range"] {
+                width: 50%;
+                cursor: pointer;
+            }
+
+        .earnings-output {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .earnings-value {
+            color: green;
+            font-weight: bold;
+        }
+
+        /*What our host says*/
+        .testimonials-section {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: white; /* Light gray background */
+        }
+
+            .testimonials-section h2 {
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 20px;
+            }
+
+        .testimonials-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .testimonial-card {
+            background: #D9C9A3; /* Beige background */
+            padding: 15px;
+            width: 30%;
+            border-radius: 10px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+            .testimonial-card p {
+                font-size: 16px;
+                margin-bottom: 5px;
+            }
+
+        .testimonial-author {
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        /*FOOTER*/
+        .social-container {
+            width: 100%;
+            margin: 0;
+            text-align: center;
+            padding: 40px 0;
+            background-color: #D3C6A4; /* Background color */
+        }
+
+        .social-header {
+            background-color: #3D3229;
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 8px 8px 0 0;
+            text-align: left;
+            padding-left: 15px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px 0;
+        }
+
+            .social-icons a img {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                transition: 0.3s ease;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+                background-color: #3D3229;
+            }
+
+                .social-icons a img:hover {
+                    transform: scale(1.1);
+                }
+
+        .support-text {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+            .support-text a {
+                text-decoration: underline;
+                color: black;
+            }
+    </style>
+    <script>
+        console.log("Script loaded");
+        function calculateEarnings() {
+            console.log("calculateEarnings function called");
+            const pricePerDay = parseFloat(document.getElementById("car-select").value);
+            const days = parseInt(document.getElementById("sharing-days").value);
+
+            if (!isNaN(pricePerDay) && !isNaN(days)) {
+                const minEarning = pricePerDay * days * 0.75;
+                const maxEarning = pricePerDay * days * 1.25;
+
+                document.getElementById("earnings-range").textContent =
+                    `₹${Math.round(minEarning)} - ₹${Math.round(maxEarning)}`;
+            } else {
+                document.getElementById("earnings-range").textContent = "₹0";
+            }
+        }
+
+        // Optional: Trigger once on load if values are set
+        document.addEventListener("DOMContentLoaded", function () {
+            console.log("DOMContentLoaded event fired");
+            calculateEarnings();
+        });
+
+        window.onload = function () {
+            console.log("Window onload event fired");
+            calculateEarnings();
+        };
+    </script>
+</head>
 <body>
-
-
     @{
         ViewData["Title"] = "Earn More By Sharing Your Car";
     }
@@ -206,43 +232,32 @@
                     Flexible options, full control, and extra income.
                 </p>
                 <a asp-controller="Host" asp-action="HostSignin">
-                <button class="btn-primary">Get Started</button></a>
+                    <button class="btn-primary">Get Started</button>
+                </a>
             </div>
         </div>
     </section>
 
-
     <!--Earnings-section-->
-
     <section class="earnings-section">
         <h2>Calculate Your Potential Earnings</h2>
-
         <div class="earnings-form">
             <label>Select your car</label>
-            <input type="text" placeholder="Brand" id="car-brand">
-            <input type="text" placeholder="Model" id="car-model">
-
+            <select id="car-select" class="form-select" onchange="calculateEarnings()">
+                <option value="">-- Select Car --</option>
+                @foreach (var car in Model)
+                {
+                    <option value="@car.PricePerDay">@car.CarName (@car.NumberOfSeats)-Seater</option>
+                }
+            </select>
             <label>Sharing Days</label>
             <input type="range" id="sharing-days" min="1" max="30" value="15" oninput="calculateEarnings()">
         </div>
-
         <p class="earnings-output">
             Potential Monthly Earnings:
-            <span id="earnings-range" class="earnings-value">₹20,000 - ₹40,000</span>
+            <span id="earnings-range" class="earnings-value">₹0</span>
         </p>
     </section>
-
-    @section Scripts {
-        <script>
-            function calculateEarnings() {
-                let days = document.getElementById("sharing-days").value;
-                let minEarnings = days * 1000;
-                let maxEarnings = days * 2000;
-                document.getElementById("earnings-range").textContent = `₹${minEarnings.toLocaleString()} - ₹${maxEarnings.toLocaleString()}`;
-            }
-        </script>
-    }
-
 
     <!--what our hosts says-->
     <section class="testimonials-section">
@@ -263,22 +278,19 @@
         </div>
     </section>
 
-
-    <!--fOOTER-->
+    <!--FOOTER-->
     <div class="social-container">
         <div class="social-header">Get connected with us on Social Network</div>
-
         <div class="social-icons">
             <a href="#"><img src="~/images/YouTube.png" alt="YouTube"></a>
             <a href="#"><img src="~/images/X.png" alt="Twitter"></a>
             <a href="#"><img src="~/images/Facebook F.png" alt="Facebook"></a>
             <a href="#"><img src="~/images/Instagram.png" alt="Instagram"></a>
         </div>
-
         <div class="support-text">
             For Help and Support <a href="#">Click Here</a>
         </div>
     </div>
-
 </body>
 </html>
+    
