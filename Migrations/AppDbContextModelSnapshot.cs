@@ -155,40 +155,6 @@ namespace ZUVO_MVC_.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ZUVO.Models.CarType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BookCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CarName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CarTypeName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Fuel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumberOfSeats")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("PricePerDay")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CarTypes");
-                });
-
             modelBuilder.Entity("ZUVO_MVC_.Models.Admin", b =>
                 {
                     b.Property<int>("Id")
@@ -223,17 +189,15 @@ namespace ZUVO_MVC_.Migrations
                     b.Property<bool>("AllowCancellation")
                         .HasColumnType("bit");
 
-                    b.Property<string>("CarRegistrationDocumentPath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Color")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<decimal>("DailyRate")
                         .HasColumnType("decimal(18,2)");
@@ -251,10 +215,6 @@ namespace ZUVO_MVC_.Migrations
                     b.Property<string>("HostId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("InsuranceCertificatePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("InsuranceCompany")
                         .IsRequired()
@@ -320,7 +280,7 @@ namespace ZUVO_MVC_.Migrations
 
                     b.HasIndex("HostId");
 
-                    b.ToTable("Cars");
+                    b.ToTable("Cars", (string)null);
                 });
 
             modelBuilder.Entity("ZUVO_MVC_.Models.CarPhoto", b =>
@@ -344,13 +304,49 @@ namespace ZUVO_MVC_.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("UploadedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.HasKey("PhotoId");
 
                     b.HasIndex("CarId");
 
-                    b.ToTable("CarPhotos");
+                    b.ToTable("CarPhotos", (string)null);
+                });
+
+            modelBuilder.Entity("ZUVO_MVC_.Models.CarType", b =>
+                {
+                    b.Property<string>("CarTypeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("BookCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("NumberOfSeats")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("PricePerDay")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("CarTypeId");
+
+                    b.ToTable("CarTypes", (string)null);
                 });
 
             modelBuilder.Entity("ZUVO_MVC_.Models.HostUser", b =>

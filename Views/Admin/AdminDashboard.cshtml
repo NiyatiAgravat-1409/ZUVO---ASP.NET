@@ -1,7 +1,7 @@
 ﻿@{
     Layout = null;
 }
-@model List<ZUVO.Models.CarType>
+@model List<ZUVO_MVC_.Models.Car>
 
 
 <!DOCTYPE html>
@@ -141,23 +141,23 @@
            
                 <div class="card-box mt-3">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h6>Car Types</h6>
+                        <h6>Cars</h6>
                         <button class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addCarModal">+</button>
                     </div>
 
                     @foreach (var car in Model)
                     {
-                        var barColor = "bg-secondary";
-                        if (car.BookCount < 30) { barColor = "bg-danger"; }
-                        else if (car.BookCount < 50) { barColor = "bg-warning"; }
-                        else { barColor = "bg-dark"; }
-
-                        // For demo, assume max BookCount = 100
-                        var percentage = car.BookCount > 100 ? 100 : car.BookCount;
                         <div class="mb-2">
-                            <strong>@car.CarName</strong>
-                            <div class="progress">
-                                <div class="progress-bar @barColor" style="width: @percentage%"></div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>@car.Make @car.Model</strong>
+                                    <div class="text-muted small">@car.LicensePlateNo</div>
+                                </div>
+                                <div class="availability-toggle" 
+                                     data-car-id="@car.CarId" 
+                                     style="width: 20px; height: 20px; border-radius: 50%; cursor: pointer; background-color: @(car.IsAvailable ? "green" : "red")"
+                                     onclick="toggleAvailability(this, '@car.CarId')">
+                                </div>
                             </div>
                         </div>
                     }
@@ -168,59 +168,93 @@
         </div>
     </div>
     <!-- Add Car Modal -->
-    <!-- Add Car Modal -->
     <div class="modal fade" id="addCarModal" tabindex="-1" aria-labelledby="addCarModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <form asp-controller="Admin" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="addCarModalLabel">Add New Car Type</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div asp-validation-summary="All" class="text-danger"></div>
 
                         <div class="mb-3">
-                            <label class="form-label">Car Type</label>
-                            <input type="text" name="CarTypeName" class="form-control" required />
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Car Name</label>
-                            <input type="text" name="CarName" class="form-control" required />
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Seats (5 or 7)</label>
-                            <input type="number" name="NumberOfSeats" class="form-control" required min="2" max="10" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Fuel Type</label>
-                            <input type="text" name="Fuel" class="form-control" required />
+                            <label class="form-label">Name</label>
+                            <input type="text" name="Name" class="form-control" required maxlength="100" />
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Price Per Day</label>
-                            <input type="number" name="PricePerDay" class="form-control" required />
+                            <input type="number" name="PricePerDay" class="form-control" required min="0" step="0.01" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="Description" class="form-control" required maxlength="500"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Number of Seats</label>
+                            <input type="number" name="NumberOfSeats" class="form-control" required min="1" max="10" />
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Booking Count</label>
-                            <input type="number" name="BookCount" class="form-control" required />
+                            <input type="number" name="BookCount" class="form-control" required min="0" />
                         </div>
-
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Add Car</button>
+                        <button type="submit" class="btn btn-primary">Add Car Type</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-s
+
+    <div class="container mt-4">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@(Html.Raw("popperjs/core@2.11.8/dist/umd/popper.min.js"))"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        async function toggleAvailability(element, carId) {
+            try {
+                const response = await fetch(`/Admin/ToggleCarAvailability/${carId}`, {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    element.style.backgroundColor = data.isAvailable ? 'green' : 'red';
+                } else {
+                    console.error('Failed to toggle availability');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
 
 </body>
 </html>

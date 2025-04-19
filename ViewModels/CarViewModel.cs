@@ -7,8 +7,9 @@ namespace ZUVO_MVC_.ViewModels
 {
     public class CarViewModel
     {
-        public string CarId { get; set; }
+        public string? CarId { get; set; }
 
+        [Required(ErrorMessage = "Host ID is required")]
         public string HostId { get; set; }
 
         [Required(ErrorMessage = "Make is required")]
@@ -89,8 +90,9 @@ namespace ZUVO_MVC_.ViewModels
         public IFormFile InsuranceCertificate { get; set; }
 
         [Required(ErrorMessage = "At least one photo is required")]
-        public string Photos { get; set; }
+        public List<IFormFile> CarPhotos { get; set; }
+        public List<string> UploadedPhotoPaths { get; set; } = new List<string>();
 
-        public bool IsAvailable { get; set; }
+        public bool IsAvailable { get; set; } = true;
     }
 } 

@@ -270,27 +270,41 @@
         </div>
 
         <div class="container mt-4">
-            <form asp-controller="Host" asp-action="Listyourcar" method="post" enctype="multipart/form-data">
+            <form asp-controller="Host" asp-action="Listyourcar" method="post" enctype="multipart/form-data" id="carForm">
         @Html.AntiForgeryToken()
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <input type="hidden" asp-for="HostId" />
+                
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["Success"]
+                    </div>
+                }
+                
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["Error"]
+                    </div>
+                }
                 <div class="section">
                     <h2>CAR INFORMATION</h2>
                     <div class="form-group">
                         <label asp-for="Make" class="control-label"></label>
-                        <input asp-for="Make" class="form-control" />
+                        <input asp-for="Make" class="form-control" required />
                         <span asp-validation-for="Make" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
                         <label asp-for="Model" class="control-label"></label>
-                        <select asp-for="Model" class="form-control">
+                        <select asp-for="Model" class="form-control" required>
                             <option value="">-- Select Car Model --</option>
                             @if (ViewBag.CarTypes != null)
                             {
-                                foreach (var car in ViewBag.CarTypes as List<ZUVO.Models.CarType>)
+                                foreach (var car in ViewBag.CarTypes as List<ZUVO_MVC_.Models.CarType>)
                                 {
-                                    <option value="@car.CarName">@car.CarName</option>
+                                    <option value="@car.Name">@car.Name</option>
                                 }
                             }
                             else
@@ -299,6 +313,12 @@
                             }
                         </select>
                         <span asp-validation-for="Model" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <textarea asp-for="Description" class="form-control" rows="4" required></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
 
                     <div class="form-group">
@@ -439,8 +459,8 @@
                                 <div class="upload-status"></div>
                             </div>
                             <div class="photo-preview" id="photoPreview"></div>
-                            <input type="hidden" asp-for="Photos" id="uploadedPhotos" />
-                            <span asp-validation-for="Photos" class="text-danger"></span>
+                            <input type="hidden" asp-for="UploadedPhotoPaths" id="uploadedPhotos" />
+                            <span asp-validation-for="CarPhotos" class="text-danger"></span>
                             <p class="file-hint">Upload photos one by one. The first photo will be used as the primary image.</p>
                             <button type="button" id="uploadButton" class="btn btn-primary">Upload</button>
                         </div>
@@ -454,57 +474,83 @@
         </div>
 
         <script>
-            let uploadedPhotoIds = [];
-
             document.addEventListener('DOMContentLoaded', function () {
+                const form = document.getElementById('carForm');
                 const photoInput = document.getElementById('photoInput');
                 const photoPreview = document.getElementById('photoPreview');
                 const uploadedPhotosInput = document.getElementById('uploadedPhotos');
 
-                document.getElementById('uploadButton').addEventListener('click', () => {
+                // Client-side validation
+                form.addEventListener('submit', function (e) {
+                    if (!form.checkValidity()) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                });
+
+                // Photo upload handling
+                document.getElementById('uploadButton').addEventListener('click', async () => {
                     const files = photoInput.files;
                     if (!files || files.length === 0) {
                         alert("Please select photo(s) first.");
                         return;
                     }
 
+                    const formData = new FormData();
                     for (let file of files) {
-                        const reader = new FileReader();
-
-                        reader.onload = function (e) {
-                            const photoDiv = document.createElement('div');
-                            photoDiv.className = 'photo-preview-item';
-
-                            const img = document.createElement('img');
-                            img.src = e.target.result;
-                            img.className = 'photo-preview-img';
-
-                            const removeBtn = document.createElement('button');
-                            removeBtn.className = 'remove-photo';
-                            removeBtn.innerText = '×';
-
-                            removeBtn.onclick = function () {
-                                photoPreview.removeChild(photoDiv);
-                                // Optional: Remove from uploadedPhotoIds array if you’re saving them in DB
-                            };
-
-                            photoDiv.appendChild(img);
-                            photoDiv.appendChild(removeBtn);
-                            photoPreview.appendChild(photoDiv);
-                        };
-
-                        reader.readAsDataURL(file);
+                        formData.append('carPhotos', file);
                     }
 
-                    // Save dummy names or IDs (if needed from backend response)
-                    uploadedPhotosInput.value = uploadedPhotoIds.join(',');
+                    try {
+                        const response = await fetch('/Host/UploadCarPhotos', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                            }
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Upload failed');
+                        }
+
+                        const result = await response.json();
+                        
+                        // Add preview for each uploaded photo
+                        for (let file of files) {
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                const photoDiv = document.createElement('div');
+                                photoDiv.className = 'photo-preview-item';
+
+                                const img = document.createElement('img');
+                                img.src = e.target.result;
+                                img.className = 'photo-preview-img';
+
+                                const removeBtn = document.createElement('button');
+                                removeBtn.className = 'remove-photo';
+                                removeBtn.innerText = '×';
+                                removeBtn.onclick = function () {
+                                    photoPreview.removeChild(photoDiv);
+                                };
+
+                                photoDiv.appendChild(img);
+                                photoDiv.appendChild(removeBtn);
+                                photoPreview.appendChild(photoDiv);
+                            };
+                            reader.readAsDataURL(file);
+                        }
+
+                        // Update hidden input with uploaded photo paths
+                        if (result.photoPaths) {
+                            uploadedPhotosInput.value = result.photoPaths.join(',');
+                        }
+                    } catch (error) {
+                        console.error('Upload error:', error);
+                        alert('Failed to upload photos. Please try again.');
+                    }
                 });
             });
-            @if (TempData["Success"] != null)
-            {
-                <text>
-                    alert('Car listed successfully!');
-                </text>
-            }
         </script>
 

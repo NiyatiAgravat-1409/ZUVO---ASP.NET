@@ -2,7 +2,7 @@
     Layout = null;
 }
 
-@model List<ZUVO.Models.CarType>
+@model List<ZUVO_MVC_.Models.CarType>
 
 @{
     ViewData["Title"] = "Become a Host";
@@ -247,7 +247,7 @@
                 <option value="">-- Select Car --</option>
                 @foreach (var car in Model)
                 {
-                    <option value="@car.PricePerDay">@car.CarName (@car.NumberOfSeats)-Seater</option>
+                    <option value="@car.PricePerDay">@car.Name (@car.NumberOfSeats)-Seater</option>
                 }
             </select>
             <label>Sharing Days</label>

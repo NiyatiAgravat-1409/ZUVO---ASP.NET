@@ -12,8 +12,8 @@ using ZUVO_MVC_.Data;
 namespace ZUVO_MVC_.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250415134440_Queries")]
-    partial class Queries
+    [Migration("20250418164313_InitialCreateForNewDB")]
+    partial class InitialCreateForNewDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,6 +158,270 @@ namespace ZUVO_MVC_.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ZUVO_MVC_.Models.Admin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Admins");
+                });
+
+            modelBuilder.Entity("ZUVO_MVC_.Models.Car", b =>
+                {
+                    b.Property<string>("CarId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AdditionalFeatures")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("AllowCancellation")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<decimal>("DailyRate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("FuelType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("HostId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("InsuranceCompany")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("InsuranceNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("InsuranceType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LicensePlateNo")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Make")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Mileage")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("MinRentalPeriod")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Seats")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Transmission")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VIN")
+                        .IsRequired()
+                        .HasMaxLength(17)
+                        .HasColumnType("nvarchar(17)");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("CarId");
+
+                    b.HasIndex("HostId");
+
+                    b.ToTable("Cars", (string)null);
+                });
+
+            modelBuilder.Entity("ZUVO_MVC_.Models.CarPhoto", b =>
+                {
+                    b.Property<string>("PhotoId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CarId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.HasKey("PhotoId");
+
+                    b.HasIndex("CarId");
+
+                    b.ToTable("CarPhotos", (string)null);
+                });
+
+            modelBuilder.Entity("ZUVO_MVC_.Models.CarType", b =>
+                {
+                    b.Property<string>("CarTypeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("BookCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("NumberOfSeats")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("PricePerDay")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("CarTypeId");
+
+                    b.ToTable("CarTypes", (string)null);
+                });
+
+            modelBuilder.Entity("ZUVO_MVC_.Models.HostUser", b =>
+                {
+                    b.Property<string>("HostId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<DateTime?>("DOB")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IssueState")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LicenseNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LicensePhoto")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Mobile")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("WalletBalance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("WalletLinked")
+                        .HasColumnType("bit");
+
+                    b.HasKey("HostId");
+
+                    b.ToTable("HostUsers", (string)null);
+                });
+
             modelBuilder.Entity("ZUVO_MVC_.Models.Query", b =>
                 {
                     b.Property<int>("Id")
@@ -203,6 +467,46 @@ namespace ZUVO_MVC_.Migrations
                     b.ToTable("Queries");
                 });
 
+            modelBuilder.Entity("ZUVO_MVC_.Models.Transaction", b =>
+                {
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HostId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("InvoiceUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("VehicleImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TransactionId");
+
+                    b.HasIndex("HostId");
+
+                    b.ToTable("Transactions", (string)null);
+                });
+
             modelBuilder.Entity("ZUVO_MVC_.Models.Users", b =>
                 {
                     b.Property<string>("Id")
@@ -236,7 +540,8 @@ namespace ZUVO_MVC_.Migrations
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -275,7 +580,8 @@ namespace ZUVO_MVC_.Migrations
 
                     b.Property<string>("ProfilePicPath")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -301,7 +607,7 @@ namespace ZUVO_MVC_.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -355,6 +661,28 @@ namespace ZUVO_MVC_.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ZUVO_MVC_.Models.Car", b =>
+                {
+                    b.HasOne("ZUVO_MVC_.Models.HostUser", "Host")
+                        .WithMany()
+                        .HasForeignKey("HostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Host");
+                });
+
+            modelBuilder.Entity("ZUVO_MVC_.Models.CarPhoto", b =>
+                {
+                    b.HasOne("ZUVO_MVC_.Models.Car", "Car")
+                        .WithMany("Photos")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Car");
+                });
+
             modelBuilder.Entity("ZUVO_MVC_.Models.Query", b =>
                 {
                     b.HasOne("ZUVO_MVC_.Models.Users", "User")
@@ -364,6 +692,27 @@ namespace ZUVO_MVC_.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ZUVO_MVC_.Models.Transaction", b =>
+                {
+                    b.HasOne("ZUVO_MVC_.Models.HostUser", "HostUser")
+                        .WithMany("Transactions")
+                        .HasForeignKey("HostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HostUser");
+                });
+
+            modelBuilder.Entity("ZUVO_MVC_.Models.Car", b =>
+                {
+                    b.Navigation("Photos");
+                });
+
+            modelBuilder.Entity("ZUVO_MVC_.Models.HostUser", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,4 @@
-    using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,6 +12,9 @@ namespace ZUVO_MVC_.Models
 
         [Required]
         public string HostId { get; set; }
+
+        [ForeignKey("HostId")]
+        public HostUser Host { get; set; }
 
         [Required]
         [StringLength(100)]
@@ -82,12 +85,6 @@ namespace ZUVO_MVC_.Models
         public string InsuranceCompany { get; set; }
 
         [Required]
-        public string CarRegistrationDocumentPath { get; set; }
-
-        [Required]
-        public string InsuranceCertificatePath { get; set; }
-
-        [Required]
         public bool IsAvailable { get; set; } = true;
 
         [Required]
@@ -95,8 +92,7 @@ namespace ZUVO_MVC_.Models
 
         public DateTime? UpdatedAt { get; set; }
 
-        // Navigation properties
-        public virtual HostUser Host { get; set; }
-        public virtual ICollection<CarPhoto> Photos { get; set; }
+        // Navigation property for photos
+        public virtual ICollection<CarPhoto> Photos { get; set; } = new List<CarPhoto>();
     }
 } 

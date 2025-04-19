@@ -1,37 +1,28 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ZUVO.Models
+namespace ZUVO_MVC_.Models
 {
     public class CarType
     {
         [Key]
-        public int Id { get; set; }
+        public string CarTypeId { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
-        [Display(Name = "Car Type")]
-        public string CarTypeName { get; set; }
+        [StringLength(100)]
+        public string Name { get; set; }
 
         [Required]
-        [Display(Name = "Car Name")]
-        public string CarName { get; set; }
-
-        [Required]
-        [Range(2, 10)]
-        [Display(Name = "Number of Seats")]
-        public int NumberOfSeats { get; set; }
-
-        [Required]
-        [Display(Name = "Fuel Type")]
-        public string Fuel { get; set; }
-
-        [Required]
-        [Range(0, 10000)]
-        [Display(Name = "Price Per Day")]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal PricePerDay { get; set; }
 
         [Required]
-        [Range(0, int.MaxValue)]
-        [Display(Name = "Booking Count")]
+        [StringLength(500)]
+        public string Description { get; set; }
+
         public int BookCount { get; set; }
+        public int NumberOfSeats { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
