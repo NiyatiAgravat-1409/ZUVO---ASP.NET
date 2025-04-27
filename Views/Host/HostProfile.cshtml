@@ -1,10 +1,7 @@
-﻿@{
-    Layout = null;
-}
-
-
+﻿@model ZUVO_MVC_.ViewModels.HostProfileViewModel
 @{
-    ViewData["Title"] = "Host Account";
+    ViewData["Title"] = "Host Profile";
+    Layout = null;
 }
 
 <!DOCTYPE html>
@@ -12,406 +9,332 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <title>Host Profile - ZUVO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Navbar styling */
+        body {
+            background-color: #E5D5B3;
+            font-family: Arial, sans-serif;
+        }
+
         .navbar {
             background-color: #D9C9A3;
             padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        /* Container for flex layout */
-        .container {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Logo and title */
-        .logo-section {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo {
-            height: 40px;
-        }
-
-        .title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-
-        /* Right-side buttons */
-        .nav-buttons {
-            display: flex;
-            align-items: center;
-        }
-
-        .btn {
-            background-color: #3D2C1D;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            margin-right: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-            .btn:hover {
-                background-color: #2B1D13;
-            }
-
-        /* Profile icon */
-        .profile-icon {
-            height: 40px;
-            cursor: pointer;
-            border-radius: 50%;
-        }
-        /* Profile Page Container */
         .profile-container {
             display: flex;
-            width: 100%;
+            padding: 20px;
+            gap: 20px;
+            max-width: 1200px;
             margin: 20px auto;
         }
 
-        /* Sidebar */
         .sidebar {
-            width: 25%;
-            background: #E2D1AC;
+            flex: 1;
+            background: #3C2A1E;
             padding: 20px;
-            text-align: center;
             border-radius: 10px;
+            color: white;
+            max-width: 300px;
+        }
+
+        .main-content {
+            flex: 3;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .profile-pic {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         .profile-pic img {
-            width: 100px;
-            height: 100px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
-        }
-
-        .profile-pic h3,
-        .profile-pic p {
-            margin: 5px 0;
-            font-size: 14px;
-        }
-
-        .edit-icons {
-            display: flex;
-            justify-content: center;
-            margin: 10px 0;
-        }
-
-        .edit-btn, .verify-btn {
-            background: #3D2C1D;
-            color: white;
-            border: none;
-            padding: 8px;
-            margin: 5px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .nav-btn {
-            display: block;
-            width: 100%;
-            background: #3D2C1D;
-            color: white;
-            border: none;
-            padding: 10px;
-            margin: 8px 0;
-            cursor: pointer;
-            border-radius: 5px;
-            text-align: left;
-        }
-
-        /* Main Content */
-        .main-content {
-            width: 75%;
-            padding: 20px;
-            background: #D9C9A3;
-            border-radius: 10px;
-            margin-left: 20px;
-        }
-
-        h2 {
-            text-align: center;
-            color: #3D2C1D;
-        }
-
-        .info-section {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .License {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        h3 {
-            color: #3D2C1D;
             margin-bottom: 10px;
+            cursor: pointer;
         }
 
-        label {
-            font-weight: bold;
+        .nav-buttons button {
             display: block;
-            margin-top: 10px;
-        }
-
-        input {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #CCC;
-            border-radius: 5px;
-            background-color: #F7F3E9;
-            margin-top: 5px;
-        }
-
-        /* Payment and Billing Section */
-        .link-wallet {
-            background: #3D2C1D;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .balance-section {
-            display: flex;
-            justify-content: space-between;
-            background: #D9C9A3;
             padding: 10px;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        /* Transactions */
-        .transaction {
-            display: flex;
-            align-items: center;
-            background: #3D2C1D;
-            padding: 10px;
-            border-radius: 10px;
-            color: white;
-            margin-top: 10px;
-        }
-
-            .transaction img {
-                width: 60px;
-                height: 40px;
-                border-radius: 5px;
-                margin-right: 15px;
-            }
-
-        .transaction-details {
-            flex-grow: 1;
-        }
-
-        .download-invoice {
-            background: #E2D1AC;
-            color: black;
+            margin: 5px 0;
+            background: #5A4536;
             border: none;
-            padding: 8px 10px;
-            cursor: pointer;
+            color: white;
             border-radius: 5px;
-            font-size: 12px;
+            cursor: pointer;
         }
 
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            color: #3C2A1E;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .btn-save {
+            background: #3C2A1E;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-save:hover {
+            background: #5A4536;
+        }
+
+        .required:after {
+            content: " *";
+            color: red;
+        }
     </style>
 </head>
 <body>
-    <!--Navbar-->
-    <section>
-        <nav class="navbar">
-            <div class="container">
-                <!-- Logo & Title -->
-                <div class="logo-section">
-                    <img src="~/images/Designer__2_-removebg-preview 1.png" alt="Zuvo Logo" class="logo">
-                    <span class="title">Host Account</span>
-                </div>
-
-                <!-- Right-side Buttons -->
-                <div class="nav-buttons">
-                    <button class="btn">Become a Host</button>
-                    <button class="btn">Name</button>
-                    <a asp-controller="Host" asp-action="Profile">
-                        <img src="~/images/Account circle.png" alt="Profile" class="profile-icon">
-                    </a>
-                </div>
+    <nav class="navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="~/images/Designer__2_-removebg-preview 1.png" alt="ZUVO Logo" height="40">
+            </a>
+            <div class="d-flex">
+                <a asp-controller="Host" asp-action="HostDashboard" class="btn btn-outline-dark me-2">Dashboard</a>
             </div>
-        </nav>
-    </section>
-    <section id="profile">
-        <div class="profile-container">
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <div class="profile-pic">
-                    <img src="~/images/Account circle.png" alt="Profile Picture">
-                    <h3>Person Name</h3>
-                    <p>8849593953</p>
-                    <p>abcd@gmail.com</p>
-                </div>
-                <div class="edit-icons">
-                    <button class="edit-btn">✎</button>
-                    <button class="verify-btn">✔</button>
-                </div>
-                <nav class="side-nav">
-                    <button class="nav-btn">Personal Information</button>
-                    <button class="nav-btn">Driving License</button>
-                    <button class="nav-btn">Payment & Billing</button>
-                    <button class="nav-btn">Bookings</button>
-                </nav>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <div class="sidebar">
+            <div class="profile-pic">
+                <img src="@(string.IsNullOrEmpty(Model.ProfilePicturePath) ? "/images/Account circle.png" : Model.ProfilePicturePath)" 
+                     alt="Profile Picture" id="profilePicture">
+                <input type="file" id="profilePictureInput" style="display: none;" accept="image/*">
+                <h4>@Model.Name</h4>
+                <p>@Model.Email</p>
             </div>
+            <div class="nav-buttons">
+                <button onclick="scrollToSection('personal-info')">Personal Information</button>
+                <button onclick="scrollToSection('license-info')">License Information</button>
+            </div>
+        </div>
 
-            <!-- Main Content -->
-            <div class="main-content">
-                <h2>Personal Information</h2>
-
-                <div class="info-section">
-                    <h3>Account Details</h3>
-                    <label>Email</label>
-                    <input type="email" value="abcd@gmail.com">
-
-                    <label>Mobile</label>
-                    <input type="text" value="8849593953">
-
-                    <label>Username</label>
-                    <input type="text" value="abcd@gmail.com">
-                </div>
-
-                <div class="info-section">
-                    <h3>Personal Details</h3>
-                    <label>Name</label>
-                    <input type="text" value="Miraliba Jadeja">
-
-                    <label>Gender</label>
-                    <input type="text" value="Female">
-
-                    <label>Date of Birth</label>
-                    <input type="text" value="DD/MM/YYYY">
-
-                    <label>Address</label>
-                    <input type="text" value="asdv, dfsd, fdfdsdfdsfd, 332434">
-                </div>
-                <div>
-                    <h2>Driving License Information</h2>
-                    <div class="License">
-                        <label>License No</label>
-                        <input type="text" name="name" value="abcd@gmail.com">
-
-                        <label>Issue State</label>
-                        <input type="text" name="name" value="9892933823">
-
-                        <lablel>Expiry Date</lablel>
-                        <input type="text" name="name" value="DD/MM/YYYY">
-
-                        <label>Upload Photo</label>
-                        <input type="text" name="name" value="" />
-                    </div>
-
-                    <!-- Payment and Billing Section -->
-                    <h2>Payment And Billing</h2>
-
-                    <div class="info-section">
-                        <h3>PAYTM WALLET</h3>
-                        <p>Wallet Status : <span style="font-weight: bold;">Not Linked</span></p>
-                        <button class="link-wallet">Link Wallet</button>
-
-                        <div class="balance-section">
-                            <span>Balance</span>
-                            <span>💰 0</span>
-                        </div>
-                    </div>
-
-                    <!-- Transactions -->
-                    <div class="info-section">
-                        <h3>Transactions</h3>
-
-                        <div class="transaction">
-                            <img src="~/images/Blue_baleno.png" alt="Car Rental">
-                            <div class="transaction-details">
-                                <p><b>12345667</b></p>
-                                <p>26 Jan – 28 Jan</p>
-                                <p>5000 Paid</p>
-                                <p>Paypal</p>
+        <div class="main-content">
+            <form id="profileForm" method="post">
+                <input type="hidden" asp-for="HostId" />
+                @Html.AntiForgeryToken()
+                
+                <div class="form-section" id="personal-info">
+                    <h3>Personal Information</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Name" class="required">Full Name</label>
+                                <input asp-for="Name" class="form-control" required />
+                                <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
-                            <button class="download-invoice">Download Invoice</button>
                         </div>
-
-                        <div class="transaction">
-                            <img src="~/images/grey_ertiga-removebg-preview 1.png " alt="Car Rental">
-                            <div class="transaction-details">
-                                <p><b>12345667</b></p>
-                                <p>26 Jan – 28 Jan</p>
-                                <p>5000 Paid</p>
-                                <p>Paypal</p>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Email" class="required">Email</label>
+                                <input asp-for="Email" class="form-control" readonly />
+                                <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
-                            <button class="download-invoice">Download Invoice</button>
                         </div>
                     </div>
 
-
-                </div>
-
-                <div>
-                    <h2>Bookings</h2>
-                    <div class="transaction">
-                        <img src="~/images/grey_ertiga-removebg-preview 1.png " alt="Car Rental">
-                        <div class="transaction-details">
-                            <p><b>12345667</b></p>
-                            <p>26 Jan – 28 Jan</p>
-                            <p>5000 Paid</p>
-                            <p>Paypal</p>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Username" class="required">Username</label>
+                                <input asp-for="Username" class="form-control" required />
+                                <span asp-validation-for="Username" class="text-danger"></span>
+                            </div>
                         </div>
-                        <button class="download-invoice">Download Invoice</button>
-                    </div>
-
-                    <div class="transaction">
-                        <img src="~/images/grey_ertiga-removebg-preview 1.png " alt="Car Rental">
-                        <div class="transaction-details">
-                            <p><b>12345667</b></p>
-                            <p>26 Jan – 28 Jan</p>
-                            <p>5000 Paid</p>
-                            <p>Paypal</p>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Mobile" class="required">Mobile Number</label>
+                                <input asp-for="Mobile" class="form-control" required />
+                                <span asp-validation-for="Mobile" class="text-danger"></span>
+                            </div>
                         </div>
-                        <button class="download-invoice">Download Invoice</button>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Gender" class="required">Gender</label>
+                                <select asp-for="Gender" class="form-control" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <span asp-validation-for="Gender" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="DOB">Date of Birth</label>
+                                <input asp-for="DOB" type="date" class="form-control" />
+                                <span asp-validation-for="DOB" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label asp-for="Address" class="required">Address</label>
+                                <textarea asp-for="Address" class="form-control" required></textarea>
+                                <span asp-validation-for="Address" class="text-danger"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="transaction">
-                    <img src="~/images/grey_ertiga-removebg-preview 1.png " alt="Car Rental">
-                    <div class="transaction-details">
-                        <p><b>12345667</b></p>
-                        <p>26 Jan – 28 Jan</p>
-                        <p>5000 Paid</p>
-                        <p>Paypal</p>
+                <div class="form-section" id="license-info">
+                    <h3>License Information</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="LicenseNumber" class="required">License Number</label>
+                                <input asp-for="LicenseNumber" class="form-control" required />
+                                <span asp-validation-for="LicenseNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="IssueState" class="required">Issue State</label>
+                                <input asp-for="IssueState" class="form-control" required />
+                                <span asp-validation-for="IssueState" class="text-danger"></span>
+                            </div>
+                        </div>
                     </div>
-                    <button class="download-invoice">Download Invoice</button>
+
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="ExpiryDate">License Expiry Date</label>
+                                <input asp-for="ExpiryDate" type="date" class="form-control" />
+                                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        </div>
 
+                <div class="text-center mt-4">
+                    <button type="button" class="btn-save" onclick="saveProfile()">Save Changes</button>
+                </div>
+            </form>
         </div>
-        </div>
-    </section>
+    </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Handle profile picture upload
+        document.getElementById('profilePicture').addEventListener('click', function() {
+            document.getElementById('profilePictureInput').click();
+        });
+
+        document.getElementById('profilePictureInput').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const formData = new FormData();
+                formData.append('profilePicture', e.target.files[0]);
+
+                fetch('/Host/UpdateProfilePicture', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('profilePicture').src = data.filePath;
+                    } else {
+                        alert('Failed to upload profile picture: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while uploading the profile picture');
+                });
+            }
+        });
+
+        // Save profile changes
+        function saveProfile() {
+            const form = document.getElementById('profileForm');
+            
+            // Check HTML5 form validation
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const formData = new FormData(form);
+            const jsonData = {};
+            
+            formData.forEach((value, key) => {
+                // Handle date fields
+                if (key === 'DOB' || key === 'ExpiryDate') {
+                    jsonData[key] = value ? value : null;
+                } else {
+                    jsonData[key] = value || '';
+                }
+            });
+
+            // Add ProfilePicturePath if it exists in the image source
+            const profilePicture = document.getElementById('profilePicture');
+            if (profilePicture) {
+                const picturePath = profilePicture.src.split('/').slice(-2).join('/');
+                if (!picturePath.includes('Account circle.png')) {
+                    jsonData.ProfilePicturePath = '/' + picturePath;
+                }
+            }
+
+            fetch('/Host/UpdateProfile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify(jsonData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Profile updated successfully');
+                    location.reload();
+                } else {
+                    const errorMessage = data.message || 
+                        (data.errors && data.errors.length > 0 ? data.errors.join('\n') : 'Unknown error');
+                    alert('Failed to update profile:\n' + errorMessage);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating the profile');
+            });
+        }
+
+        // Scroll to section
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>

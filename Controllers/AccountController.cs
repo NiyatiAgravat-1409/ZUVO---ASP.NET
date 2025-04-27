@@ -61,6 +61,8 @@ namespace ZUVO_MVC_.Controllers
                     FullName = model.Name,
                     Email = model.Email,
                     UserName = model.Email,
+                    Address = model.Address,
+                    DateOfBirth = model.DateOfBirth
                 };
 
                 var result = await userManager.CreateAsync(users, model.Password);

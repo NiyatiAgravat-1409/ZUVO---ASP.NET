@@ -125,6 +125,18 @@
                     </div>
 
                     <div class="mb-3">
+                        <label asp-for="Address" class="form-label">Address</label>
+                        <input type="text" asp-for="Address" class="form-control" placeholder="Enter your address" required>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DateOfBirth" class="form-label">Date of Birth</label>
+                        <input type="date" asp-for="DateOfBirth" class="form-control" required>
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
                         <label asp-for="Password" class="form-label">Password</label>
                         <input type="password" asp-for="Password" class="form-control" placeholder="at least 8 characters" required>
                         <span asp-validation-for="Password" class="text-danger"></span>

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZUVO_MVC_.Data;
 
@@ -11,9 +12,11 @@ using ZUVO_MVC_.Data;
 namespace ZUVO_MVC_.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250424030323_Add")]
+    partial class Add
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -216,9 +219,6 @@ namespace ZUVO_MVC_.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("HostUserHostId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("InsuranceCompany")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -282,8 +282,6 @@ namespace ZUVO_MVC_.Migrations
                     b.HasKey("CarId");
 
                     b.HasIndex("HostId");
-
-                    b.HasIndex("HostUserHostId");
 
                     b.ToTable("Cars", (string)null);
                 });
@@ -360,7 +358,6 @@ namespace ZUVO_MVC_.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -379,22 +376,19 @@ namespace ZUVO_MVC_.Migrations
                     b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Gender")
+                    b.Property<int?>("Gender")
                         .HasColumnType("int");
 
                     b.Property<string>("IssueState")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LicenseNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LicensePhoto")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Mobile")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -402,18 +396,11 @@ namespace ZUVO_MVC_.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordSalt")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PaymentMethod")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProfilePicturePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -529,6 +516,7 @@ namespace ZUVO_MVC_.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -536,6 +524,7 @@ namespace ZUVO_MVC_.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DateOfBirth")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -546,6 +535,7 @@ namespace ZUVO_MVC_.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ExpiryDate")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
@@ -554,12 +544,15 @@ namespace ZUVO_MVC_.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Gender")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IssueState")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LicenseNo")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -586,6 +579,7 @@ namespace ZUVO_MVC_.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ProfilePicPath")
+                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -596,6 +590,7 @@ namespace ZUVO_MVC_.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UploadPhoto")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
@@ -674,10 +669,6 @@ namespace ZUVO_MVC_.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ZUVO_MVC_.Models.HostUser", null)
-                        .WithMany("Cars")
-                        .HasForeignKey("HostUserHostId");
-
                     b.Navigation("Host");
                 });
 
@@ -721,8 +712,6 @@ namespace ZUVO_MVC_.Migrations
 
             modelBuilder.Entity("ZUVO_MVC_.Models.HostUser", b =>
                 {
-                    b.Navigation("Cars");
-
                     b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618

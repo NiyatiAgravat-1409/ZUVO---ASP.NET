@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.AspNetCore.WebUtilities;    
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
 using System.Security.Claims;
@@ -18,6 +18,9 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
+using System.Text.RegularExpressions;
+using Polly;  // Add this for retry policy
 
 namespace ZUVO_MVC_.Controllers
 {
@@ -71,10 +74,12 @@ namespace ZUVO_MVC_.Controllers
                     HostId = Guid.NewGuid().ToString(),
                     Name = model.FullName,
                     Email = model.Email,
-                    Password = model.Password, // 🔐 NOTE: Hash in production!
                     Username = model.Email.Split('@')[0], // just to set something by default
                     CreatedAt = DateTime.UtcNow
                 };
+
+                // Set the password with hashing
+                newUser.SetPassword(model.Password);
 
                 _context.HostUsers.Add(newUser);
                 await _context.SaveChangesAsync();
@@ -96,67 +101,109 @@ namespace ZUVO_MVC_.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> HostSignin(HostLoginViewModel model)
         {
-            _logger.LogInformation("HostSignin attempt for email: {Email}", model.Email);
+            if (!ModelState.IsValid) return View(model);
 
-            if (!ModelState.IsValid)
+            // 1. First verify basic email format
+            if (string.IsNullOrWhiteSpace(model.Email) || !model.Email.Contains("@"))
             {
-                _logger.LogWarning("Model validation failed for email: {Email}", model.Email);
+                ModelState.AddModelError(string.Empty, "Invalid email format");
                 return View(model);
             }
 
+            // 2. Check database availability
             try
             {
-                // Check if the host exists in HostUsers table
-                var hostUser = await _context.HostUsers.FirstOrDefaultAsync(h => h.Email == model.Email);
-                
-                if (hostUser == null)
+                if (!await TestDatabaseConnection())
                 {
-                    _logger.LogWarning("Host not found for email: {Email}", model.Email);
-                    ModelState.AddModelError(string.Empty, "Invalid email or password.");
+                    ModelState.AddModelError(string.Empty, "System temporarily unavailable. Please try again later.");
                     return View(model);
-                }
-
-                _logger.LogInformation("Host found in database for email: {Email}", model.Email);
-
-                // Verify password directly since HostUser doesn't use Identity
-                if (string.Equals(hostUser.Password, model.Password, StringComparison.OrdinalIgnoreCase))
-                {
-                    // Create claims for the host user
-                    var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, hostUser.Name),
-                        new Claim(ClaimTypes.Email, hostUser.Email),
-                        new Claim("HostId", hostUser.HostId),
-                        new Claim(ClaimTypes.Role, "Host")
-                    };
-
-                    // Create claims identity and principal
-                    var claimsIdentity = new ClaimsIdentity(claims, "HostAuth");
-                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                    // Sign in the user
-                    await HttpContext.SignInAsync("HostAuth", claimsPrincipal, new AuthenticationProperties
-                    {
-                        IsPersistent = true,
-                        ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
-                    });
-
-                    _logger.LogInformation("Host logged in successfully for email: {Email}", model.Email);
-                    return RedirectToAction("HostDashboard", "Host");
-                }
-                else
-                {
-                    _logger.LogWarning("Invalid password for email: {Email}", model.Email);
-                    ModelState.AddModelError(string.Empty, "Invalid email or password.");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during host signin for email: {Email}", model.Email);
-                ModelState.AddModelError(string.Empty, "An error occurred during login. Please try again.");
+                _logger.LogError(ex, "Database connection test failed");
+                ModelState.AddModelError(string.Empty, "System temporarily unavailable");
+                return View(model);
             }
 
-            return View(model);
+            // 3. Main login logic with retry policy
+            try
+            {
+                var policy = Policy
+                    .Handle<SqlException>()
+                    .WaitAndRetryAsync(
+                        retryCount: 2,
+                        sleepDurationProvider: attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
+                        onRetry: (exception, delay, attempt, context) =>
+                        {
+                            _logger.LogWarning($"Retry {attempt} due to {exception.Message}");
+                        });
+
+                var result = await policy.ExecuteAsync(async () =>
+                {
+                    return await AttemptLogin(model);
+                });
+
+                if (result is not null)
+                {
+                    return result;
+                }
+
+                ModelState.AddModelError(string.Empty, "Invalid email or password");
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Login process failed");
+                ModelState.AddModelError(string.Empty, "System temporarily unavailable");
+                return View(model);
+            }
+        }
+
+        private async Task<bool> TestDatabaseConnection()
+        {
+            try
+            {
+                return await _context.Database.CanConnectAsync();
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private async Task<IActionResult> AttemptLogin(HostLoginViewModel model)
+        {
+            var user = await _context.HostUsers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Email == model.Email);
+
+            if (user == null || !user.VerifyPassword(model.Password))
+            {
+                return null;
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("HostId", user.HostId),
+                new Claim(ClaimTypes.Role, "Host")
+            };
+
+            var identity = new ClaimsIdentity(claims, "HostAuth");
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(
+                "HostAuth",
+                principal,
+                new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
+                });
+
+            return RedirectToAction("HostDashboard", "Host");
         }
 
         [HttpGet]
@@ -432,9 +479,136 @@ namespace ZUVO_MVC_.Controllers
             return Path.Combine("uploads", fileName);
         }
 
-        public IActionResult HostProfile()
+        [Authorize(AuthenticationSchemes = "HostAuth")]
+        public async Task<IActionResult> HostProfile()
         {
-            return View();
+            var hostId = User.FindFirst("HostId")?.Value;
+            if (string.IsNullOrEmpty(hostId))
+            {
+                return RedirectToAction("HostSignin");
+            }
+
+            var hostUser = await _context.HostUsers.FindAsync(hostId);
+            if (hostUser == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new HostProfileViewModel
+            {
+                HostId = hostUser.HostId,
+                Email = hostUser.Email,
+                Name = hostUser.Name,
+                Mobile = hostUser.Mobile,
+                Username = hostUser.Username,
+                Gender = hostUser.Gender?.ToString(),
+                DOB = hostUser.DOB,
+                Address = hostUser.Address,
+                LicenseNumber = hostUser.LicenseNumber,
+                IssueState = hostUser.IssueState,
+                ExpiryDate = hostUser.ExpiryDate
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize(AuthenticationSchemes = "HostAuth")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateProfile([FromBody] HostProfileViewModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                        .ToList();
+                    return Json(new { success = false, errors = errors });
+                }
+
+                var hostUser = await _context.HostUsers.FindAsync(model.HostId);
+                if (hostUser == null)
+                {
+                    return NotFound(new { success = false, message = "Host not found." });
+                }
+
+                // Update the host user properties
+                hostUser.Name = model.Name;
+                hostUser.Mobile = model.Mobile;
+                hostUser.Username = model.Username;
+                hostUser.Gender = Enum.TryParse<Gender>(model.Gender, out var gender) ? gender : null;
+                hostUser.DOB = model.DOB;
+                hostUser.Address = model.Address;
+                hostUser.LicenseNumber = model.LicenseNumber;
+                hostUser.IssueState = model.IssueState;
+                hostUser.ExpiryDate = model.ExpiryDate;
+                hostUser.UpdatedAt = DateTime.UtcNow;
+
+                if (!string.IsNullOrEmpty(model.ProfilePicturePath))
+                {
+                    hostUser.ProfilePicturePath = model.ProfilePicturePath;
+                }
+
+                _context.Update(hostUser);
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating host profile");
+                return Json(new { success = false, message = "An error occurred while updating the profile." });
+            }
+        }
+
+        [HttpPost]
+        [Authorize(AuthenticationSchemes = "HostAuth")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateProfilePicture(IFormFile profilePicture)
+        {
+            if (profilePicture == null || profilePicture.Length == 0)
+            {
+                return BadRequest(new { success = false, message = "No file uploaded" });
+            }
+
+            var hostId = User.FindFirst("HostId")?.Value;
+            if (string.IsNullOrEmpty(hostId))
+            {
+                return Unauthorized(new { success = false, message = "User not authenticated" });
+            }
+
+            var hostUser = await _context.HostUsers.FindAsync(hostId);
+            if (hostUser == null)
+            {
+                return NotFound(new { success = false, message = "Host not found" });
+            }
+
+            try
+            {
+                var fileName = $"{hostId}_{DateTime.Now:yyyyMMddHHmmss}{Path.GetExtension(profilePicture.FileName)}";
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "hosts");
+                Directory.CreateDirectory(uploadsFolder);
+
+                var filePath = Path.Combine(uploadsFolder, fileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await profilePicture.CopyToAsync(fileStream);
+                }
+
+                // Update the profile picture path in the database
+                hostUser.ProfilePicturePath = $"/uploads/hosts/{fileName}";
+                _context.Update(hostUser);
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, filePath = hostUser.ProfilePicturePath });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error uploading profile picture");
+                return StatusCode(500, new { success = false, message = "Error uploading profile picture" });
+            }
         }
 
         public IActionResult EditCarDetails()
